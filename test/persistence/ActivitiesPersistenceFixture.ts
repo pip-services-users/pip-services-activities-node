@@ -1,29 +1,38 @@
 let async = require('async');
 let assert = require('chai').assert;
 
-import { FilterParams } from 'pip-services-runtime-node';
-import { PagingParams } from 'pip-services-runtime-node';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
+import { DataPage } from 'pip-services-commons-node';
+
+import { PartyActivityV1 } from '../../src/data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from '../../src/persistence/IActivitiesPersistence';
 
-let ACTIVITY = {
+let ACTIVITY: PartyActivityV1 = {
+    id: null,
     type: 'test',
+    time: new Date(),
     party: {
         id: '1',
+        type: 'party',
         name: 'Test User'
     },
     ref_item: {
         id: '2',
         type: 'party',
         name: 'Admin User'
-    }
+    },
+    ref_parents: [],
+    ref_party: null,
+    details: null
 };
 
 export class ActivitiesPersistenceFixture {
-    private _db: IActivitiesPersistence;
+    private _persistence: IActivitiesPersistence;
     
-    constructor(db) {
-        assert.isNotNull(db);
-        this._db = db;
+    constructor(persistence) {
+        assert.isNotNull(persistence);
+        this._persistence = persistence;
     }
                 
     testLogPartyActivities(done) {
@@ -32,7 +41,7 @@ export class ActivitiesPersistenceFixture {
         async.series([
             // Log activity
             (callback) => {
-                this._db.logPartyActivity(
+                this._persistence.create(
                     null,
                     ACTIVITY,
                     (err, activity) => {
@@ -47,19 +56,19 @@ export class ActivitiesPersistenceFixture {
             },
             // Check activity
             (callback) => {
-                this._db.getPartyActivities(
+                this._persistence.getPageByFilter(
                     null,
                     FilterParams.fromValue({
                         id: activity1.id
                     }),
                     new PagingParams(),
-                    (err, activities) => {
+                    (err, page) => {
                         assert.isNull(err);
 
-                        assert.isObject(activities);
-                        assert.lengthOf(activities.data, 1);
-                        var activity = activities.data[0];
+                        assert.isObject(page);
+                        assert.lengthOf(page.data, 1);
 
+                        var activity = page.data[0];
                         assert.isNotNull(activity.time);
                         assert.equal(activity.type, ACTIVITY.type);
                         assert.equal(activity.party.id, ACTIVITY.party.id);
@@ -78,7 +87,7 @@ export class ActivitiesPersistenceFixture {
         async.series([
             // Log activity
             (callback) => {
-                this._db.logPartyActivity(
+                this._persistence.create(
                     null,
                     ACTIVITY,
                     function (err, activity) {
@@ -91,19 +100,19 @@ export class ActivitiesPersistenceFixture {
             },
             // Get activities
             (callback) => {
-                this._db.getPartyActivities(
+                this._persistence.getPageByFilter(
                     null,
                     FilterParams.fromValue({
                         party_id: '1'
                     }),
                     new PagingParams(),
-                    (err, activities) => {
+                    (err, page) => {
                         assert.isNull(err);
 
-                        assert.isObject(activities);
-                        assert.isTrue(activities.data.length > 0);
+                        assert.isObject(page);
+                        assert.isTrue(page.data.length > 0);
 
-                        var activity = activities.data[0];
+                        var activity = page.data[0];
                         assert.equal(activity.type, ACTIVITY.type);
                         assert.isNotNull(activity.time);
                         assert.equal(activity.party.name, ACTIVITY.party.name);

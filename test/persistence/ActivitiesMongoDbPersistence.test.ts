@@ -1,36 +1,32 @@
-import { ComponentSet } from 'pip-services-runtime-node';
-import { ComponentConfig } from 'pip-services-runtime-node';
-import { DynamicMap } from 'pip-services-runtime-node';
+import { YamlConfigReader } from 'pip-services-commons-node';
 
 import { ActivitiesMongoDbPersistence } from '../../src/persistence/ActivitiesMongoDbPersistence';
 import { ActivitiesPersistenceFixture } from './ActivitiesPersistenceFixture';
 
-let options = new DynamicMap(require('../../../config/config'));
-let dbOptions = ComponentConfig.fromValue(options.getNullableMap('persistence'));
-
 suite('ActivitiesMongoDbPersistence', ()=> {
-    // Skip test if mongodb is not configured
-    if (dbOptions.getRawContent().getString('descriptor.type') != 'mongodb')
-        return; 
-    
-    let db = new ActivitiesMongoDbPersistence();
-    db.configure(dbOptions);
+    let persistence: ActivitiesMongoDbPersistence;
+    let fixture: ActivitiesPersistenceFixture;
 
-    let fixture = new ActivitiesPersistenceFixture(db);
-
-    suiteSetup((done) => {
-        db.link(new ComponentSet());
-        db.open(done); 
-    });
-    
-    suiteTeardown((done) => {
-        db.close(done);
-    });
-    
     setup((done) => {
-        db.clearTestData(done);
+        let config = YamlConfigReader.readConfig(null, './config/test_connections.yaml');
+        let dbConfig = config.getSection('mongodb');
+
+        persistence = new ActivitiesMongoDbPersistence();
+        persistence.configure(dbConfig);
+
+        fixture = new ActivitiesPersistenceFixture(persistence);
+
+        persistence.open(null, (err: any) => {
+            persistence.clear(null, (err) => {
+                done(err);
+            });
+        });
     });
     
+    teardown((done) => {
+        persistence.close(null, done);
+    });
+
     test('Log Party Activities', (done) => {
         fixture.testLogPartyActivities(done);
     });
@@ -38,4 +34,5 @@ suite('ActivitiesMongoDbPersistence', ()=> {
     test('Get Party Activities', (done) => {
         fixture.testGetPartyActivities(done);
     });
+    
 });

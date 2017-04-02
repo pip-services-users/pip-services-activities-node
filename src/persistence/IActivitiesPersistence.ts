@@ -1,9 +1,16 @@
-import { FilterParams } from 'pip-services-runtime-node';
-import { PagingParams } from 'pip-services-runtime-node';
-import { IPersistence } from 'pip-services-runtime-node';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
+import { DataPage } from 'pip-services-commons-node';
 
-export interface IActivitiesPersistence extends IPersistence {
-    getPartyActivities(correlationId: string, filter: FilterParams, pagingParams: PagingParams, callback: any): void;
-    logPartyActivity(correlationId: string, activity: any, callback: any): void;
-    deletePartyActivities(correlationId: string, filter: FilterParams, callback: any): void;
+import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
+
+export interface IActivitiesPersistence {
+    getPageByFilter(correlationId: string, filter: FilterParams, paging: PagingParams, 
+        callback: (err: any, page: DataPage<PartyActivityV1>) => void): void;
+
+    create(correlationId: string, activity: PartyActivityV1,
+        callback: (err: any, activity: PartyActivityV1) => void): void;
+
+    deleteByFilter(correlationId: string, filter: FilterParams, 
+        callback: (err: any) => void): void;
 }

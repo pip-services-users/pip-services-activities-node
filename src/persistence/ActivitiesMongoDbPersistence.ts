@@ -1,122 +1,110 @@
 let _ = require('lodash');
 let async = require('async');
 
-import { Category } from 'pip-services-runtime-node';
-import { ComponentDescriptor } from 'pip-services-runtime-node';
-import { ComponentConfig } from 'pip-services-runtime-node';
-import { FilterParams } from 'pip-services-runtime-node';
-import { PagingParams } from 'pip-services-runtime-node';
-import { MongoDbPersistence } from 'pip-services-runtime-node';
-import { IActivitiesPersistence } from './IActivitiesPersistence';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
+import { DataPage } from 'pip-services-commons-node';
+import { IdentifiableMongoDbPersistence } from 'pip-services-data-node';
 
-export class ActivitiesMongoDbPersistence extends MongoDbPersistence implements IActivitiesPersistence {
-	/**
-	 * Unique descriptor for the ActivitiesMongoDbPersistence component
-	 */
-	public static Descriptor: ComponentDescriptor = new ComponentDescriptor(
-		Category.Persistence, "pip-services-activities", "mongodb", "*"
-	);
+import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
+import { IActivitiesPersistence } from './IActivitiesPersistence';
+import { ActivitiesMongoDbSchema } from './ActivitiesMongoDbSchema';
+
+export class ActivitiesMongoDbPersistence 
+    extends IdentifiableMongoDbPersistence<PartyActivityV1, string> implements IActivitiesPersistence {
 
     constructor() {
-        super(ActivitiesMongoDbPersistence.Descriptor, require('./PartyActivityModel'));
+        super('party_activities', ActivitiesMongoDbSchema());
     }
         
-    // Default callback if no callback was set
-    // Todo: Perhaps that's not an issue with seneca. Reconsider later
-    private defaultCallback(err) {
-        if (err) this.error('Logging activity failed', err);
-    }
+    private composeFilter(filter: FilterParams): any {
+        filter = filter || new FilterParams();
 
-    private getFilterCriteria(filter: any): any {
-        let criteria = _.pick(filter, 'type');
+        let criteria = [];
 
-        if (filter.id || filter.activity_id) 
-            criteria._id = filter.id || filter.activity_id;
+        let search = filter.getAsNullableString('search');
+        if (search != null) {
+            let searchRegex = new RegExp(search, "i");
+            let searchCriteria = [];
+            searchCriteria.push({ type: { $regex: searchRegex } });
+            searchCriteria.push({ 'party.name': { $regex: searchRegex } });
+            searchCriteria.push({ 'ref_item.name': { $regex: searchRegex } });
+            searchCriteria.push({ 'ref_party.name': { $regex: searchRegex } });
+            criteria.push({ $or: searchCriteria });
+        }
+
+        let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
+        if (id != null)
+            criteria.push({ _id: id });
+
+        let type = filter.getAsNullableString('type');
+        if (type != null)
+            criteria.push({ type: type });
 
         // Decode include types
-        if (filter.include_types) {
-            let includeTypes = filter.include_types;
+        let includeTypes = filter.getAsObject('include_types');
+        if (includeTypes) {
             if (!_.isArray(includeTypes)) 
                 includeTypes = ('' + includeTypes).split(',');
-            criteria.type = { $in: includeTypes };
+            criteria.push({ type: { $in: includeTypes } });
         }
 
         // Decode exclude types
-        if (filter.exclude_types) {
-            let excludeTypes = filter.exclude_types;
+        let excludeTypes = filter.getAsObject('exclude_types');
+        if (excludeTypes) {
             if (!_.isArray(excludeTypes)) 
                 excludeTypes = ('' + excludeTypes).split(',');
-            criteria.type = { $nin: excludeTypes };
+            criteria.push({ type: { $nin: excludeTypes } });
         }
-
-        // Decode start and end conditions
-        if (filter.start || filter.end) {
-            criteria.$and = criteria.$and || [];
-            if (filter.start)
-                criteria.$and.push({ time: { $gte: filter.start} });
-            if (filter.end)
-                criteria.$and.push({ time: { $lt: filter.end} });
-        }
-
-        // Decode ref_parent_id and ref_item_id
-        if (filter.ref_parent_id) 
-            criteria['ref_parents.id'] = filter.ref_parent_id;
-        else if (filter.ref_item_id) 
-            criteria['ref_parent.id'] = filter.ref_item_id;
-
-        // Decode ref_item_id
-        if (filter.ref_item_id) 
-            criteria['ref_item.id'] = filter.ref_item_id;
 
         // Decode party_id
-        if (filter.party_id) 
-            criteria['party.id'] = filter.party_id;
+        let partyId = filter.getAsNullableString('party_id');
+        if (partyId) 
+            criteria.push({ 'party.id': partyId });
+
+        // Decode ref_item_id
+        let refItemId = filter.getAsNullableString('ref_item_id');
+        if (refItemId) 
+            criteria.push({ 'ref_item.id': refItemId });
+
+        // Decode ref_parent_id and ref_item_id
+        let refParentId = filter.getAsNullableString('ref_parent_id');
+        if (refParentId) 
+            criteria.push({ 'ref_parents.id': refParentId });
 
         // Decode party
-        if (filter.ref_party_id) 
-            criteria['ref_party.id'] = filter.ref_party_id;
+        let refPartyId = filter.getAsNullableString('ref_party_id');
+        if (refPartyId) 
+            criteria.push({ 'ref_party.id': refPartyId });
 
-        return criteria;
+        let fromTime = filter.getAsNullableDateTime('from_time');
+        if (fromTime != null)
+            criteria.push({ time: { $gte: fromTime } });
+
+        let toTime = filter.getAsNullableDateTime('to_time');
+        if (toTime != null)
+            criteria.push({ time: { $lt: toTime } });
+
+        return criteria.length > 0 ? { $and: criteria } : {};
     }
 
-    // Todo: make filters more specific. For instance get activities by party, by ref, etc.
-    public getPartyActivities(correlationId: string, filter: FilterParams, paging: PagingParams, callback: any) {
-        let criteria = this.getFilterCriteria(filter);
-        this.getPage(criteria, paging, '-time', { parent_ids: 0 }, callback);
+    public getPageByFilter(correlationId: string, filter: FilterParams, paging: PagingParams,
+        callback: (err: any, page: DataPage<PartyActivityV1>) => void) {
+        let criteria = this.composeFilter(filter);
+        super.getPageByFilter(correlationId, criteria, paging, '-time', { parent_ids: 0 }, callback);
     }
 
-    public logPartyActivity(correlationId: string, activity: any, callback: any) {
-        activity = _.clone(activity);
-
-        // Fill automatically generated fields
-        activity._id = activity.id || this.createUuid();
-        activity.time = new Date();
-
-        // Ensure that ref_item is included into ref_parents
-        if (activity.ref_item) {
-            activity.ref_parents = activity.ref_parents || [];
-            let found = _.find(activity.ref_parents, (ref) => {
-                return ref.id === activity.ref_item.id;
-            });
-
-            if (found == null) {
-                activity.ref_parents.push(activity.ref_item);
-            }
-        }
-
-        // Set default callback
-        callback = callback || this.defaultCallback;
-
-        this.create(activity, callback);
+    public create(correlationId: string, item: PartyActivityV1, callback: (err: any, item: PartyActivityV1) => void): void {
+        item.ref_parents = item.ref_parents || [];
+        if (item.ref_item)
+            item.ref_parents.push(item.ref_item);
+        super.create(correlationId, item, callback);
     }
 
-    // Deletes activities that satisfy specified filter
-    // Todo: make filters more specific. For instance get activities by party, by entity, etc.
-    public deletePartyActivities(correlationId: string, filter: FilterParams, callback: any) {
-        let criteria = this.getFilterCriteria(filter);
+    public deleteByFilter(correlationId: string, filter: FilterParams,
+        callback: (err: any) => void) {
 
-        // Set default callback
-        callback = callback || this.defaultCallback;
+        let criteria = this.composeFilter(filter);
 
         this._model.remove(
             criteria,

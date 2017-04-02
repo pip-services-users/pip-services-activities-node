@@ -1,39 +1,25 @@
-import { ComponentSet } from 'pip-services-runtime-node';
-import { ComponentConfig } from 'pip-services-runtime-node';
-import { DynamicMap } from 'pip-services-runtime-node';
+import { ConfigParams } from 'pip-services-commons-node';
 
 import { ActivitiesFilePersistence } from '../../src/persistence/ActivitiesFilePersistence';
 import { ActivitiesPersistenceFixture } from './ActivitiesPersistenceFixture';
 
-let config = ComponentConfig.fromValue({
-    descriptor: {
-        type: 'file'
-    },
-    options: {
-        path: './data/activities.test.json',
-        data: []
-    }
-});
-
 suite('ActivitiesFilePersistence', ()=> {
-    let db, fixture;
+    let persistence: ActivitiesFilePersistence;
+    let fixture: ActivitiesPersistenceFixture;
     
-    suiteSetup((done) => {
-        db = new ActivitiesFilePersistence();
-        db.configure(config);
-
-        fixture = new ActivitiesPersistenceFixture(db);
-        
-        db.link(new ComponentSet());
-        db.open(done); 
-    });
-    
-    suiteTeardown((done) => {
-        db.close(done);
-    });
-
     setup((done) => {
-        db.clearTestData(done);
+        persistence = new ActivitiesFilePersistence('./data/activities.test.json');
+
+        fixture = new ActivitiesPersistenceFixture(persistence);
+        
+        persistence.open(null, (err) => {
+            if (err) done(err);
+            else persistence.clear(null, done);
+        });
+    });
+    
+    teardown((done) => {
+        persistence.close(null, done);
     });
         
     test('Log Party Activities', (done) => {
@@ -43,4 +29,5 @@ suite('ActivitiesFilePersistence', ()=> {
     test('Get Party Activities', (done) => {
         fixture.testGetPartyActivities(done);
     });
+    
 });

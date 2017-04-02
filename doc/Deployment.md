@@ -1,6 +1,6 @@
-# Deployment Guide <br/> Activities Microservice
+# Deployment Guide <br/> Party Activities Microservice
 
-Activities microservice can be used in different deployment scenarios.
+Party activities microservice can be used in different deployment scenarios.
 
 * [Standalone Process](#process)
 * [Seneca Plugin](#seneca)
@@ -34,7 +34,7 @@ To learn more about Seneca microservices framework to go http://senecajs.org
     ...
     "dependencies": {
         ....
-        "pip-services-activities": "git+ssh://git@github.com:pip-services/pip-services-activities.git",
+        "pip-services-activities-node": "^1.0.*",
         ...
     }
 }
@@ -59,16 +59,19 @@ See [Configuration Guide](Configuration.md) for details.
 var seneca = require('seneca')();
 
 var config = {
-    log: { type: 'console' },
-    counters: { type: 'log' },
-    db: {
+    logger: { 
+        level: 'debug'
+    },
+    persistence: {
         type: 'file',
         path: 'activities.json'
     }
 };
 
-seneca.use('pip-services-activities', config);
+var plugin = require('pip-services-activities-node').ActivitiesSenecaPlugin;
+
+seneca.use(pugin, config);
 ```
 
 You can use the microservice by calling seneca commands directly as described in [Seneca Protocol](SenecaProtocolV1.md)
-or by using [ActivitiesSenecaClient](https://github.com/pip-services/pip-clients-activities-node/NodeClientApiV1.md/#client_seneca)
+or by using [ActivitiesSenecaClient](https://github.com/pip-services-users/pip-clients-activities-node/NodeClientApiV1.md/#client_seneca)

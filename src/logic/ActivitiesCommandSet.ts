@@ -1,10 +1,10 @@
-import { CommandSet } from 'pip-services-runtime-node';
-import { ICommand } from 'pip-services-runtime-node';
-import { Command } from 'pip-services-runtime-node';
-import { Schema } from 'pip-services-runtime-node';
-import { DynamicMap } from 'pip-services-runtime-node';
-import { FilterParams } from 'pip-services-runtime-node';
-import { PagingParams } from 'pip-services-runtime-node';
+import { CommandSet } from 'pip-services-commons-node';
+import { ICommand } from 'pip-services-commons-node';
+import { Command } from 'pip-services-commons-node';
+import { Schema } from 'pip-services-commons-node';
+import { Parameters } from 'pip-services-commons-node';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
 
 import { IActivitiesBusinessLogic } from './IActivitiesBusinessLogic';
 
@@ -25,14 +25,11 @@ export class ActivitiesCommandSet extends CommandSet {
 
 	private makeGetPartyActivitiesCommand(): ICommand {
 		return new Command(
-			this._logic,
 			"get_party_activities",
-			new Schema()
-				.withProperty("filter", "FilterParams")
-                .withProperty("paging", "PagingParams"),
-            (correlationId: string, args: DynamicMap, callback: (err: any, result: any) => void) => {
+			null,
+            (correlationId: string, args: Parameters, callback: (err: any, result: any) => void) => {
                 let filter = FilterParams.fromValue(args.get("filter"));
-                let paging = PagingParams.fromValue(args.get("filter"));
+                let paging = PagingParams.fromValue(args.get("paging"));
                 this._logic.getPartyActivities(correlationId, filter, paging, callback);
             }
 		);
@@ -40,11 +37,9 @@ export class ActivitiesCommandSet extends CommandSet {
 
 	private makeLogPartyActivityCommand(): ICommand {
 		return new Command(
-			this._logic,
 			"log_party_activity",
-			new Schema()
-				.withProperty("activity", "any"),
-            (correlationId: string, args: DynamicMap, callback: (err: any, result: any) => void) => {
+			null,
+            (correlationId: string, args: Parameters, callback: (err: any, result: any) => void) => {
                 let activity = args.get("activity");
                 this._logic.logPartyActivity(correlationId, activity, callback);
             }
@@ -53,26 +48,26 @@ export class ActivitiesCommandSet extends CommandSet {
 
 	private makeBatchPartyActivitiesCommand(): ICommand {
 		return new Command(
-			this._logic,
 			"batch_party_activities",
-			new Schema()
-				.withArray("activities", "any"),
-            (correlationId: string, args: DynamicMap, callback: (err: any, result: any) => void) => {
-                let activities = args.getArray("activities");
-                this._logic.batchPartyActivities(correlationId, activities, callback);
+			null,
+            (correlationId: string, args: Parameters, callback: (err: any, result: any) => void) => {
+                let activities = args.getAsArray("activities");
+                this._logic.batchPartyActivities(correlationId, activities, (err) => {
+					if (callback) callback(err, null)
+				});
             }
 		);
 	}
 
 	private makeDeletePartyActivitiesCommand(): ICommand {
 		return new Command(
-			this._logic,
 			"delete_party_activities",
-			new Schema()
-				.withProperty("filter", "FilterParams"),
-            (correlationId: string, args: DynamicMap, callback: (err: any, result: any) => void) => {
+			null,
+            (correlationId: string, args: Parameters, callback: (err: any, result: any) => void) => {
                 let filter = FilterParams.fromValue(args.get("filter"));
-                this._logic.deletePartyActivities(correlationId, filter, callback);
+                this._logic.deletePartyActivities(correlationId, filter, (err) => {
+					if (callback) callback(err, null)
+				});
             }
 		);
 	}

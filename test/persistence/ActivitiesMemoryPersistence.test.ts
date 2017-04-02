@@ -1,24 +1,19 @@
-import { ComponentSet } from 'pip-services-runtime-node';
-import { ComponentConfig } from 'pip-services-runtime-node';
-
 import { ActivitiesMemoryPersistence } from '../../src/persistence/ActivitiesMemoryPersistence';
 import { ActivitiesPersistenceFixture } from './ActivitiesPersistenceFixture';
 
 suite('ActivitiesMemoryPersistence', ()=> {
-    let db, fixture;
+    let persistence: ActivitiesMemoryPersistence;
+    let fixture: ActivitiesPersistenceFixture;
     
     setup((done) => {
-        db = new ActivitiesMemoryPersistence();
-        db.configure(new ComponentConfig());
-
-        fixture = new ActivitiesPersistenceFixture(db);
+        persistence = new ActivitiesMemoryPersistence();
+        fixture = new ActivitiesPersistenceFixture(persistence);
         
-        db.link(new ComponentSet());
-        db.open(done);
+        persistence.open(null, done);
     });
     
     teardown((done) => {
-        db.close(done);
+        persistence.close(null, done);
     });
         
     test('Log Party Activities', (done) => {
@@ -28,4 +23,5 @@ suite('ActivitiesMemoryPersistence', ()=> {
     test('Get Party Activities', (done) => {
         fixture.testGetPartyActivities(done);
     });
+
 });

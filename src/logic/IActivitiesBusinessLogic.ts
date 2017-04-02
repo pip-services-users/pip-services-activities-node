@@ -1,10 +1,19 @@
-import { FilterParams } from 'pip-services-runtime-node';
-import { PagingParams } from 'pip-services-runtime-node';
-import { IBusinessLogic } from 'pip-services-runtime-node';
+import { FilterParams } from 'pip-services-commons-node';
+import { PagingParams } from 'pip-services-commons-node';
+import { DataPage } from 'pip-services-commons-node';
 
-export interface IActivitiesBusinessLogic extends IBusinessLogic {
-    getPartyActivities(correlationId: string, filter: FilterParams, pagingParams: PagingParams, callback: any): void;
-    logPartyActivity(correlationId: string, activity: any, callback: any): void;
-    batchPartyActivities(correlationId: string, activities: any[], callback);
-    deletePartyActivities(correlationId: string, filter: FilterParams, callback: any): void;
+import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
+
+export interface IActivitiesBusinessLogic {
+    getPartyActivities(correlationId: string, filter: FilterParams, paging: PagingParams, 
+        callback: (err: any, page: DataPage<PartyActivityV1>) => void): void;
+
+    logPartyActivity(correlationId: string, activity: PartyActivityV1,
+        callback?: (err: any, activity: PartyActivityV1) => void): void;
+
+    batchPartyActivities(correlationId: string, activities: PartyActivityV1[],
+        callback?: (err: any) => void): void;
+
+    deletePartyActivities(correlationId: string, filter: FilterParams, 
+        callback?: (err: any) => void): void;
 }

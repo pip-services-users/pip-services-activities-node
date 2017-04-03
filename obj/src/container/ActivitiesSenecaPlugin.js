@@ -6,6 +6,7 @@ const pip_services_commons_node_3 = require("pip-services-commons-node");
 const pip_services_commons_node_4 = require("pip-services-commons-node");
 const pip_services_commons_node_5 = require("pip-services-commons-node");
 const pip_services_net_node_1 = require("pip-services-net-node");
+const pip_services_net_node_2 = require("pip-services-net-node");
 const ActivitiesMemoryPersistence_1 = require("../persistence/ActivitiesMemoryPersistence");
 const ActivitiesFilePersistence_1 = require("../persistence/ActivitiesFilePersistence");
 const ActivitiesMongoDbPersistence_1 = require("../persistence/ActivitiesMongoDbPersistence");
@@ -13,9 +14,9 @@ const ActivitiesController_1 = require("../logic/ActivitiesController");
 const ActivitiesSenecaServiceV1_1 = require("../services/version1/ActivitiesSenecaServiceV1");
 class ActivitiesSenecaPlugin extends pip_services_net_node_1.SenecaPlugin {
     constructor(seneca, options) {
-        super('pip-services-activities', seneca, ActivitiesSenecaPlugin.createReferences(options));
+        super('pip-services-activities', seneca, ActivitiesSenecaPlugin.createReferences(seneca, options));
     }
-    static createReferences(options) {
+    static createReferences(seneca, options) {
         options = options || {};
         let logger = new pip_services_commons_node_4.ConsoleLogger();
         let loggerOptions = options.logger || {};
@@ -36,7 +37,8 @@ class ActivitiesSenecaPlugin extends pip_services_net_node_1.SenecaPlugin {
         let service = new ActivitiesSenecaServiceV1_1.ActivitiesSenecaServiceV1();
         let serviceOptions = options.service || {};
         service.configure(pip_services_commons_node_3.ConfigParams.fromValue(serviceOptions));
-        return pip_services_commons_node_1.References.fromTuples(new pip_services_commons_node_2.Descriptor('pip-services-commons', 'logger', 'console', 'default', '1.0'), logger, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'persistence', persistenceType, 'default', '1.0'), persistence, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'controller', 'default', 'default', '1.0'), controller, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'service', 'seneca', 'default', '1.0'), service);
+        let senecaInstance = new pip_services_net_node_2.SenecaInstance(seneca);
+        return pip_services_commons_node_1.References.fromTuples(new pip_services_commons_node_2.Descriptor('pip-services-commons', 'logger', 'console', 'default', '1.0'), logger, new pip_services_commons_node_2.Descriptor('pip-services-net', 'seneca', 'instance', 'default', '1.0'), senecaInstance, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'persistence', persistenceType, 'default', '1.0'), persistence, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'controller', 'default', 'default', '1.0'), controller, new pip_services_commons_node_2.Descriptor('pip-services-activities', 'service', 'seneca', 'default', '1.0'), service);
     }
 }
 exports.ActivitiesSenecaPlugin = ActivitiesSenecaPlugin;

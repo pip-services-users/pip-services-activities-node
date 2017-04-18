@@ -23,6 +23,52 @@ This microservice has no dependencies on other microservices.
   - [HTTP Version 1](doc/HttpProtocolV1.md)
   - [Seneca Version 1](doc/SenecaProtocolV1.md)
 
+##  Contract
+
+Logical contract of the microservice is presented below. For physical implementation (HTTP/REST, Thrift, Seneca, Lambda, etc.),
+please, refer to documentation of the specific protocol.
+
+```typescript
+class PartyActivityV1 implements IStringIdentifiable {
+    /* Identification */
+    public id: string;
+
+    /* Identification fields */
+    public time: Date;
+    public type: string;
+    public party: ReferenceV1;
+
+    /* References objects (notes, goals, etc.) */
+    public ref_item: ReferenceV1;
+    public ref_parents: ReferenceV1[];
+    public ref_party: ReferenceV1;
+
+    /* Other details like % of progress or new status */
+    public details: StringValueMap;
+}
+
+class ReferenceV1 implements IStringIdentifiable {
+    public id: string;
+    public type: string;
+    public name?: string;
+}
+
+interface IActivitiesV1 {
+    getPartyActivities(correlationId: string, filter: FilterParams, paging: PagingParams, 
+        callback: (err: any, page: DataPage<PartyActivityV1>) => void): void;
+
+    logPartyActivity(correlationId: string, activity: PartyActivityV1,
+        callback?: (err: any, activity: PartyActivityV1) => void): void;
+
+    batchPartyActivities(correlationId: string, activities: PartyActivityV1[],
+        callback?: (err: any) => void): void;
+
+    deletePartyActivities(correlationId: string, filter: FilterParams, 
+        callback?: (err: any) => void): void;
+}
+
+```
+
 ## Download
 
 Right now the only way to get the microservice is to check it out directly from github repository

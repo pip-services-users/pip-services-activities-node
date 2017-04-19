@@ -8,7 +8,7 @@ import { ActivitiesController } from '../logic/ActivitiesController';
 import { ActivitiesHttpServiceV1 } from '../services/version1/ActivitiesHttpServiceV1';
 import { ActivitiesSenecaServiceV1 } from '../services/version1/ActivitiesSenecaServiceV1'; 
 
-export class ActivitiesFactory extends Factory {
+export class ActivitiesServiceFactory extends Factory {
 	public static Descriptor = new Descriptor("pip-services-activities", "factory", "default", "default", "1.0");
 	public static MemoryPersistenceDescriptor = new Descriptor("pip-services-activities", "persistence", "memory", "*", "1.0");
 	public static FilePersistenceDescriptor = new Descriptor("pip-services-activities", "persistence", "file", "*", "1.0");
@@ -19,12 +19,12 @@ export class ActivitiesFactory extends Factory {
 	
 	constructor() {
 		super();
-		this.registerAsType(ActivitiesFactory.MemoryPersistenceDescriptor, ActivitiesMemoryPersistence);
-		this.registerAsType(ActivitiesFactory.FilePersistenceDescriptor, ActivitiesFilePersistence);
-		this.registerAsType(ActivitiesFactory.MongoDbPersistenceDescriptor, ActivitiesMongoDbPersistence);
-		this.registerAsType(ActivitiesFactory.ControllerDescriptor, ActivitiesController);
-		this.registerAsType(ActivitiesFactory.SenecaServiceDescriptor, ActivitiesSenecaServiceV1);
-		this.registerAsType(ActivitiesFactory.HttpServiceDescriptor, ActivitiesHttpServiceV1);
+		this.registerAsType(ActivitiesServiceFactory.MemoryPersistenceDescriptor, ActivitiesMemoryPersistence);
+		this.registerAsType(ActivitiesServiceFactory.FilePersistenceDescriptor, ActivitiesFilePersistence);
+		this.registerAsType(ActivitiesServiceFactory.MongoDbPersistenceDescriptor, ActivitiesMongoDbPersistence);
+		this.registerAsType(ActivitiesServiceFactory.ControllerDescriptor, ActivitiesController);
+		this.registerAsType(ActivitiesServiceFactory.SenecaServiceDescriptor, ActivitiesSenecaServiceV1);
+		this.registerAsType(ActivitiesServiceFactory.HttpServiceDescriptor, ActivitiesHttpServiceV1);
 	}
 	
 }

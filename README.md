@@ -47,7 +47,7 @@ class PartyActivityV1 implements IStringIdentifiable {
     public details: StringValueMap;
 }
 
-class ReferenceV1 implements IStringIdentifiable {
+class ReferenceV1 {
     public id: string;
     public type: string;
     public name?: string;

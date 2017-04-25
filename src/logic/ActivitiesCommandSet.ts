@@ -15,12 +15,12 @@ import { PagingParamsSchema } from 'pip-services-commons-node';
 import { DateTimeConverter } from 'pip-services-commons-node';
 
 import { PartyActivityV1Schema } from '../data/version1/PartyActivityV1Schema';
-import { IActivitiesBusinessLogic } from './IActivitiesBusinessLogic';
+import { IActivitiesController } from './IActivitiesController';
 
 export class ActivitiesCommandSet extends CommandSet {
-    private _logic: IActivitiesBusinessLogic;
+    private _logic: IActivitiesController;
 
-    constructor(logic: IActivitiesBusinessLogic) {
+    constructor(logic: IActivitiesController) {
         super();
 
         this._logic = logic;

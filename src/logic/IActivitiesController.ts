@@ -4,7 +4,7 @@ import { DataPage } from 'pip-services-commons-node';
 
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 
-export interface IActivitiesBusinessLogic {
+export interface IActivitiesController {
     getPartyActivities(correlationId: string, filter: FilterParams, paging: PagingParams, 
         callback: (err: any, page: DataPage<PartyActivityV1>) => void): void;
 

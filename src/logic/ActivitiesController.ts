@@ -14,10 +14,10 @@ import { CommandSet } from 'pip-services-commons-node';
 
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from '../persistence/IActivitiesPersistence';
-import { IActivitiesBusinessLogic } from './IActivitiesBusinessLogic';
+import { IActivitiesController } from './IActivitiesController';
 import { ActivitiesCommandSet } from './ActivitiesCommandSet';
 
-export class ActivitiesController implements IConfigurable, IReferenceable, ICommandable, IActivitiesBusinessLogic {
+export class ActivitiesController implements IConfigurable, IReferenceable, ICommandable, IActivitiesController {
     private static _defaultConfig: ConfigParams = ConfigParams.fromTuples(
         'dependencies.persistence', 'pip-services-activities:persistence:*:*:1.0'
     );

@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=IActivitiesBusinessLogic.js.map
+//# sourceMappingURL=IActivitiesController.js.map

@@ -8,8 +8,8 @@ import { DataPage } from 'pip-services-commons-node';
 import { ICommandable } from 'pip-services-commons-node';
 import { CommandSet } from 'pip-services-commons-node';
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
-import { IActivitiesBusinessLogic } from './IActivitiesBusinessLogic';
-export declare class ActivitiesController implements IConfigurable, IReferenceable, ICommandable, IActivitiesBusinessLogic {
+import { IActivitiesController } from './IActivitiesController';
+export declare class ActivitiesController implements IConfigurable, IReferenceable, ICommandable, IActivitiesController {
     private static _defaultConfig;
     private _dependencyResolver;
     private _persistence;

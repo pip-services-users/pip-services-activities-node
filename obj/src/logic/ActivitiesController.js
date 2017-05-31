@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let async = require('async');
 const pip_services_commons_node_1 = require("pip-services-commons-node");
 const pip_services_commons_node_2 = require("pip-services-commons-node");
+const pip_services_commons_node_3 = require("pip-services-commons-node");
 const ActivitiesCommandSet_1 = require("./ActivitiesCommandSet");
 class ActivitiesController {
     constructor() {
@@ -24,6 +25,8 @@ class ActivitiesController {
         this._persistence.getPageByFilter(correlationId, filter, paging, callback);
     }
     logPartyActivity(correlationId, activity, callback) {
+        activity.time = pip_services_commons_node_3.DateTimeConverter.toNullableDateTime(activity.time);
+        activity.time = activity.time || new Date();
         this._persistence.create(correlationId, activity, callback);
     }
     batchPartyActivities(correlationId, activities, callback) {

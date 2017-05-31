@@ -11,6 +11,7 @@ import { PagingParams } from 'pip-services-commons-node';
 import { DataPage } from 'pip-services-commons-node';
 import { ICommandable } from 'pip-services-commons-node';
 import { CommandSet } from 'pip-services-commons-node';
+import { DateTimeConverter } from 'pip-services-commons-node';
 
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from '../persistence/IActivitiesPersistence';
@@ -48,6 +49,10 @@ export class ActivitiesController implements IConfigurable, IReferenceable, ICom
         
     public logPartyActivity(correlationId: string, activity: PartyActivityV1,
         callback?: (err: any, activity: PartyActivityV1) => void): void {
+        
+        activity.time = DateTimeConverter.toNullableDateTime(activity.time);
+        activity.time = activity.time || new Date();
+
         this._persistence.create(correlationId, activity, callback);
     }
     

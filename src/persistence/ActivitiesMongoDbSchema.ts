@@ -24,7 +24,7 @@ export let ActivitiesMongoDbSchema = function(collection?: string) {
     let schema = new Schema(
         {
             /* Identification */
-            _id: { type: String, unique: true },
+            _id: { type: String },
 
             /* Identification fields */
             time: { type: Date, required: true, index: true, 'default': Date.now },

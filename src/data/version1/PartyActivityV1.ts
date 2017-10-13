@@ -26,10 +26,10 @@ export class PartyActivityV1 implements IStringIdentifiable {
     public party: ReferenceV1;
 
     /* References objects (notes, goals, etc.) */
-    public ref_item: ReferenceV1;
-    public ref_parents: ReferenceV1[];
-    public ref_party: ReferenceV1;
+    public ref_item?: ReferenceV1;
+    public ref_parents?: ReferenceV1[];
+    public ref_party?: ReferenceV1;
 
     /* Other details like % of progress or new status */
-    public details: StringValueMap;
+    public details?: StringValueMap;
 }

@@ -19,7 +19,7 @@ exports.ActivitiesMongoDbSchema = function (collection) {
     });
     let schema = new mongoose_1.Schema({
         /* Identification */
-        _id: { type: String, unique: true },
+        _id: { type: String },
         /* Identification fields */
         time: { type: Date, required: true, index: true, 'default': Date.now },
         type: { type: String, required: true },

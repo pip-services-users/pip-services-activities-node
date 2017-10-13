@@ -7,8 +7,8 @@ export declare class PartyActivityV1 implements IStringIdentifiable {
     time: Date;
     type: string;
     party: ReferenceV1;
-    ref_item: ReferenceV1;
-    ref_parents: ReferenceV1[];
-    ref_party: ReferenceV1;
-    details: StringValueMap;
+    ref_item?: ReferenceV1;
+    ref_parents?: ReferenceV1[];
+    ref_party?: ReferenceV1;
+    details?: StringValueMap;
 }

@@ -73,7 +73,7 @@ suite('ActivitiesRestServiceV1', ()=> {
         async.series([
             // Log an activity batch
             (callback) => {
-                rest.post('/activities/batch_party_activities',
+                rest.post('/v1/activities/batch_party_activities',
                     {
                         activities: [
                             ACTIVITY,
@@ -89,7 +89,7 @@ suite('ActivitiesRestServiceV1', ()=> {
             },
             // Get activities
             (callback) => {
-                rest.post('/activities/get_party_activities',
+                rest.post('/v1/activities/get_party_activities',
                     {
                         filter: null,
                         paging: null

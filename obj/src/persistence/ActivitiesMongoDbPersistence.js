@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let _ = require('lodash');
 let async = require('async');
 const pip_services_commons_node_1 = require("pip-services-commons-node");
-const pip_services_oss_node_1 = require("pip-services-oss-node");
+const pip_services_mongodb_node_1 = require("pip-services-mongodb-node");
 const ActivitiesMongoDbSchema_1 = require("./ActivitiesMongoDbSchema");
-class ActivitiesMongoDbPersistence extends pip_services_oss_node_1.IdentifiableMongoDbPersistence {
+class ActivitiesMongoDbPersistence extends pip_services_mongodb_node_1.IdentifiableMongoDbPersistence {
     constructor() {
         super('party_activities', ActivitiesMongoDbSchema_1.ActivitiesMongoDbSchema());
     }

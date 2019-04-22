@@ -1,5 +1,5 @@
-import { ConfigParams } from 'pip-services-commons-node';
-import { JsonFilePersister } from 'pip-services-data-node';
+import { ConfigParams } from 'pip-services3-commons-node';
+import { JsonFilePersister } from 'pip-services3-data-node';
 import { ActivitiesMemoryPersistence } from './ActivitiesMemoryPersistence';
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 export declare class ActivitiesFilePersistence extends ActivitiesMemoryPersistence {

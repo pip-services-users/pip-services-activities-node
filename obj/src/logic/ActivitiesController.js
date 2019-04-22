@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let async = require('async');
-const pip_services_commons_node_1 = require("pip-services-commons-node");
-const pip_services_commons_node_2 = require("pip-services-commons-node");
-const pip_services_commons_node_3 = require("pip-services-commons-node");
+const pip_services3_commons_node_1 = require("pip-services3-commons-node");
+const pip_services3_commons_node_2 = require("pip-services3-commons-node");
+const pip_services3_commons_node_3 = require("pip-services3-commons-node");
 const ActivitiesCommandSet_1 = require("./ActivitiesCommandSet");
 class ActivitiesController {
     constructor() {
-        this._dependencyResolver = new pip_services_commons_node_2.DependencyResolver(ActivitiesController._defaultConfig);
+        this._dependencyResolver = new pip_services3_commons_node_2.DependencyResolver(ActivitiesController._defaultConfig);
     }
     configure(config) {
         this._dependencyResolver.configure(config);
@@ -25,7 +25,7 @@ class ActivitiesController {
         this._persistence.getPageByFilter(correlationId, filter, paging, callback);
     }
     logPartyActivity(correlationId, activity, callback) {
-        activity.time = pip_services_commons_node_3.DateTimeConverter.toNullableDateTime(activity.time);
+        activity.time = pip_services3_commons_node_3.DateTimeConverter.toNullableDateTime(activity.time);
         activity.time = activity.time || new Date();
         this._persistence.create(correlationId, activity, callback);
     }
@@ -41,6 +41,6 @@ class ActivitiesController {
         this._persistence.deleteByFilter(correlationId, filter, callback);
     }
 }
-ActivitiesController._defaultConfig = pip_services_commons_node_1.ConfigParams.fromTuples('dependencies.persistence', 'pip-services-activities:persistence:*:*:1.0');
+ActivitiesController._defaultConfig = pip_services3_commons_node_1.ConfigParams.fromTuples('dependencies.persistence', 'pip-services-activities:persistence:*:*:1.0');
 exports.ActivitiesController = ActivitiesController;
 //# sourceMappingURL=ActivitiesController.js.map

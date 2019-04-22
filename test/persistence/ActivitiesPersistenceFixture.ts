@@ -1,9 +1,9 @@
 let async = require('async');
 let assert = require('chai').assert;
 
-import { FilterParams } from 'pip-services-commons-node';
-import { PagingParams } from 'pip-services-commons-node';
-import { DataPage } from 'pip-services-commons-node';
+import { FilterParams } from 'pip-services3-commons-node';
+import { PagingParams } from 'pip-services3-commons-node';
+import { DataPage } from 'pip-services3-commons-node';
 
 import { PartyActivityV1 } from '../../src/data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from '../../src/persistence/IActivitiesPersistence';

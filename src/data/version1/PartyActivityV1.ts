@@ -1,5 +1,5 @@
-import { IStringIdentifiable } from 'pip-services-commons-node';
-import { StringValueMap } from 'pip-services-commons-node';
+import { IStringIdentifiable } from 'pip-services3-commons-node';
+import { StringValueMap } from 'pip-services3-commons-node';
 
 import { ReferenceV1 } from './ReferenceV1';
 

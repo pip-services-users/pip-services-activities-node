@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 let Mixed = mongoose_1.Schema.Types.Mixed;
-exports.ActivitiesMongoDbSchema = function (collection) {
+exports.ActivitiesMongooseSchema = function (collection) {
     collection = collection || 'party_activities';
     let referenceSchema = new mongoose_1.Schema({
         id: { type: String, required: true },
@@ -48,4 +48,4 @@ exports.ActivitiesMongoDbSchema = function (collection) {
     });
     return schema;
 };
-//# sourceMappingURL=ActivitiesMongoDbSchema.js.map
+//# sourceMappingURL=ActivitiesMongooseSchema.js.map

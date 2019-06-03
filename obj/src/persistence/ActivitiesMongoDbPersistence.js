@@ -4,10 +4,10 @@ let _ = require('lodash');
 let async = require('async');
 const pip_services3_commons_node_1 = require("pip-services3-commons-node");
 const pip_services3_mongoose_node_1 = require("pip-services3-mongoose-node");
-const ActivitiesMongoDbSchema_1 = require("./ActivitiesMongoDbSchema");
+const ActivitiesMongooseSchema_1 = require("./ActivitiesMongooseSchema");
 class ActivitiesMongoDbPersistence extends pip_services3_mongoose_node_1.IdentifiableMongoosePersistence {
     constructor() {
-        super('party_activities', ActivitiesMongoDbSchema_1.ActivitiesMongoDbSchema());
+        super('party_activities', ActivitiesMongooseSchema_1.ActivitiesMongooseSchema());
     }
     composeFilter(filter) {
         filter = filter || new pip_services3_commons_node_1.FilterParams();

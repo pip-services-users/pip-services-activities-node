@@ -8,13 +8,13 @@ import { IdentifiableMongoosePersistence } from 'pip-services3-mongoose-node';
 
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from './IActivitiesPersistence';
-import { ActivitiesMongoDbSchema } from './ActivitiesMongoDbSchema';
+import { ActivitiesMongooseSchema } from './ActivitiesMongooseSchema';
 
 export class ActivitiesMongoDbPersistence 
     extends IdentifiableMongoosePersistence<PartyActivityV1, string> implements IActivitiesPersistence {
 
     constructor() {
-        super('party_activities', ActivitiesMongoDbSchema());
+        super('party_activities', ActivitiesMongooseSchema());
     }
         
     private composeFilter(filter: FilterParams): any {

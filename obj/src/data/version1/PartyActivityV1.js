@@ -8,7 +8,7 @@ class PartyActivityV1 {
         this.party = party;
         this.ref_item = ref_item;
         this.ref_parents = ref_parents || [];
-        this.ref_party;
+        this.ref_party = ref_party;
         this.details = details;
     }
 }

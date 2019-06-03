@@ -5,6 +5,7 @@ $component = Get-Content -Path "component.json" | ConvertFrom-Json
 $buildImage="$($component.registry)/$($component.name):$($component.version)-$($env:TRAVIS_BUILD_NUMBER)-build"
 $testImage="$($component.registry)/$($component.name):$($component.version)-$($env:TRAVIS_BUILD_NUMBER)-test"
 $rcImage="$($component.registry)/$($component.name):$($component.version)-$($env:TRAVIS_BUILD_NUMBER)-rc"
+$protoImage="$($component.registry)/$($component.name):$($component.version)-$($component.build)-protogen"
 
 # Clean up build directories
 Get-ChildItem -Path "." -Include "obj" -Recurse | foreach($_) { Remove-Item -Force -Recurse $_.FullName }
@@ -14,6 +15,7 @@ Get-ChildItem -Path "." -Include "node_modules" -Recurse | foreach($_) { Remove-
 docker rmi $buildImage --force
 docker rmi $testImage --force
 docker rmi $rcImage --force
+docker rmi $protoImage --force
 docker image prune --force
 
 # Remove existed containers

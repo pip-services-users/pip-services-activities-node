@@ -3,8 +3,8 @@ let grpc = require('grpc');
 var protoLoader = require('@grpc/proto-loader');
 let async = require('async');
 
-let services = require('../../../../src/protos/accounts_v1_grpc_pb');
-let messages = require('../../../../src/protos/accounts_v1_pb');
+// let services = require('../../../../src/protos/party_activities_v1_grpc_pb');
+// let messages = require('../../../../src/protos/party_activities_v1_pb');
 
 import { Descriptor } from 'pip-services3-commons-node';
 import { ConfigParams } from 'pip-services3-commons-node';

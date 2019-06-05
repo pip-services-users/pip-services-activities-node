@@ -1,24 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let _ = require('lodash');
 let async = require('async');
-
-import { FilterParams } from 'pip-services3-commons-node';
-import { PagingParams } from 'pip-services3-commons-node';
-import { DataPage } from 'pip-services3-commons-node';
-import { IdentifiableCouchbasePersistence } from 'pip-services3-couchbase-node';
-
-import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
-import { IActivitiesPersistence } from './IActivitiesPersistence';
-
-export class ActivitiesCouchbasePersistence
-    extends IdentifiableCouchbasePersistence<PartyActivityV1, string> implements IActivitiesPersistence {
-
+const pip_services3_commons_node_1 = require("pip-services3-commons-node");
+const pip_services3_couchbase_node_1 = require("pip-services3-couchbase-node");
+class ActivitiesCouchbasePersistence extends pip_services3_couchbase_node_1.IdentifiableCouchbasePersistence {
     constructor() {
         super('party_activities');
     }
-
-    private composeFilter(filter: FilterParams): any {
-        filter = filter || new FilterParams();
-
+    composeFilter(filter) {
+        filter = filter || new pip_services3_commons_node_1.FilterParams();
         let search = filter.getAsNullableString('search');
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
         let type = filter.getAsNullableString('type');
@@ -30,20 +21,17 @@ export class ActivitiesCouchbasePersistence
         let refPartyId = filter.getAsNullableString('ref_party_id');
         let fromTime = filter.getAsNullableDateTime('from_time');
         let toTime = filter.getAsNullableDateTime('to_time');
-
         // Process include_types filter
         if (!_.isArray(includeTypes))
             includeTypes = ('' + includeTypes).split(',');
         if (!_.isArray(includeTypes))
             includeTypes = null;
-
         // Process exclude_types filter
         if (!_.isArray(excludeTypes))
             excludeTypes = ('' + excludeTypes).split(',');
         if (!_.isArray(excludeTypes))
             excludeTypes = null;
-
-        let filters: string[] = [];
+        let filters = [];
         if (id != null)
             filters.push("id='" + id + "'");
         if (type != null)
@@ -69,21 +57,18 @@ export class ActivitiesCouchbasePersistence
             filters.push("create_time>='" + fromTime + "'");
         if (toTime != null)
             filters.push("create_time<'" + toTime + "'");
-
-
         return filters.length > 0 ? filters.join(" AND ") : null;
     }
-
-    public getPageByFilter(correlationId: string, filter: FilterParams, paging: PagingParams,
-        callback: (err: any, page: DataPage<PartyActivityV1>) => void) {
+    getPageByFilter(correlationId, filter, paging, callback) {
         let criteria = this.composeFilter(filter);
         super.getPageByFilter(correlationId, criteria, paging, '-time', { parent_ids: 0 }, callback);
     }
-
-    public create(correlationId: string, item: PartyActivityV1, callback: (err: any, item: PartyActivityV1) => void): void {
+    create(correlationId, item, callback) {
         item.ref_parents = item.ref_parents || [];
         if (item.ref_item)
             item.ref_parents.push(item.ref_item);
         super.create(correlationId, item, callback);
     }
 }
+exports.ActivitiesCouchbasePersistence = ActivitiesCouchbasePersistence;
+//# sourceMappingURL=ActivitiesCouchbasePersistence.js.map

@@ -1,6 +1,6 @@
 let _ = require('lodash');
-let services = require('../../../../src/protos/accounts_v1_grpc_pb');
-let messages = require('../../../../src/protos/accounts_v1_pb');
+let services = require('../../../../src/protos/party_activities_v1_grpc_pb');
+let messages = require('../../../../src/protos/party_activities_v1_pb');
 
 import { IReferences } from 'pip-services3-commons-node';
 import { Descriptor } from 'pip-services3-commons-node';

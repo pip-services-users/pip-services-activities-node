@@ -70,7 +70,7 @@ suite('ActivitiesGrpcServiceV1', () => {
 
     setup(() => {
         let packageDefinition = protoLoader.loadSync(
-            __dirname + "../../../../../src/protos/party_ativities_v1.proto",
+            __dirname + "../../../../../src/protos/party_activities_v1.proto",
             {
                 keepCase: true,
                 longs: Number,

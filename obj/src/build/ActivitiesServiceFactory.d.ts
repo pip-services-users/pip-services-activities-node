@@ -1,13 +1,14 @@
 import { Factory } from 'pip-services3-components-node';
+import { Descriptor } from 'pip-services3-commons-node';
 export declare class ActivitiesServiceFactory extends Factory {
-    static Descriptor: any;
-    static MemoryPersistenceDescriptor: any;
-    static FilePersistenceDescriptor: any;
-    static MongoDbPersistenceDescriptor: any;
-    static CouchbasePersistenceDescriptor: any;
-    static ControllerDescriptor: any;
-    static HttpServiceDescriptor: any;
-    static GrpcServiceDescriptor: any;
-    static CommandableGrpcServiceDescriptor: any;
+    static Descriptor: Descriptor;
+    static MemoryPersistenceDescriptor: Descriptor;
+    static FilePersistenceDescriptor: Descriptor;
+    static MongoDbPersistenceDescriptor: Descriptor;
+    static CouchbasePersistenceDescriptor: Descriptor;
+    static ControllerDescriptor: Descriptor;
+    static HttpServiceDescriptor: Descriptor;
+    static GrpcServiceDescriptor: Descriptor;
+    static CommandableGrpcServiceDescriptor: Descriptor;
     constructor();
 }

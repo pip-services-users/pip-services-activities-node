@@ -33,11 +33,11 @@ RUN npm install
 COPY . .
 
 # Build protoc
-RUN protoc \
-    --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
-    --js_out="import_style=commonjs,binary:./generated" \
-    --ts_out="service=true:./generated" \
-    src/protos/party_activities_v1.proto
+# RUN protoc \
+#     --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
+#     --js_out="import_style=commonjs,binary:./generated" \
+#     --ts_out="service=true:./generated" \
+#     src/protos/party_activities_v1.proto
 
 # Compile source in typescript
 RUN tsc

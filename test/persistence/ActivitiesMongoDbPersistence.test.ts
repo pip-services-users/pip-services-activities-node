@@ -27,8 +27,6 @@ suite('ActivitiesMongoDbPersistence', ()=> {
         persistence = new ActivitiesMongoDbPersistence();
         persistence.configure(dbConfig);
 
-        console.log("!!! ", persistence)
-
         fixture = new ActivitiesPersistenceFixture(persistence);
 
         persistence.open(null, (err: any) => {

@@ -90,14 +90,17 @@ suite('ActivitiesCommandableGrpcServiceV1', () => {
             (callback) => {
                 client.invoke(
                     {
-                        method: '/v1/activities/batch_party_activities',
+                        method: 'v1/activities.batch_party_activities',
                         args_empty: false,
                         args_json: JSON.stringify({
-                            party_activities: [ACTIVITY]
+                            activities: [ACTIVITY]
                         })
                     },
-                    (err, req, res) => {
+                    (err, response) => {
                         assert.isNull(err);
+
+                        assert.isTrue(response.result_empty);
+                        
                         callback();
                     }
                 );
@@ -106,18 +109,22 @@ suite('ActivitiesCommandableGrpcServiceV1', () => {
             (callback) => {
                 client.invoke(
                     {
-                        method: '/v1/activities/get_party_activities',
+                        method: 'v1/activities.get_party_activities',
                         args_empty: false,
                         args_json: JSON.stringify({
                             filter: null,
                             paging: null
                         })
                     },
-                    (err, req, res, page) => {
+                    (err, response) => {
                         assert.isNull(err);
 
+                        assert.isFalse(response.result_empty);
+                        assert.isString(response.result_json);
+                        let page = JSON.parse(response.result_json);
+
                         assert.isObject(page);
-                        assert.isTrue(page.data.length > 2);
+                        assert.equal(page.data.length, 1);
 
                         let activity = page.data[0];
                         assert.equal(activity.type, ACTIVITY.type);

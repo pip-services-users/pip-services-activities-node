@@ -3,8 +3,8 @@ let grpc = require('grpc');
 var protoLoader = require('@grpc/proto-loader');
 let async = require('async');
 
-// let services = require('../../../../src/protos/party_activities_v1_grpc_pb');
-// let messages = require('../../../../src/protos/party_activities_v1_pb');
+// let services = require('../../../../src/protos/activities_v1_grpc_pb');
+// let messages = require('../../../../src/protos/activities_v1_pb');
 
 import { Descriptor } from 'pip-services3-commons-node';
 import { ConfigParams } from 'pip-services3-commons-node';
@@ -70,7 +70,7 @@ suite('ActivitiesGrpcServiceV1', () => {
 
     setup(() => {
         let packageDefinition = protoLoader.loadSync(
-            __dirname + "../../../../../src/protos/party_activities_v1.proto",
+            __dirname + "../../../../../src/protos/activities_v1.proto",
             {
                 keepCase: true,
                 longs: Number,
@@ -79,7 +79,7 @@ suite('ActivitiesGrpcServiceV1', () => {
                 oneofs: true
             }
         );
-        let clientProto = grpc.loadPackageDefinition(packageDefinition).commandable.Commandable;
+        let clientProto = grpc.loadPackageDefinition(packageDefinition).activities_v1.Activities;
 
         client = new clientProto('localhost:3000', grpc.credentials.createInsecure());
     });
@@ -90,9 +90,11 @@ suite('ActivitiesGrpcServiceV1', () => {
             (callback) => {
                 client.batch_party_activities(
                     {
-                        party_activities: [ACTIVITY]
+                        activities: [ACTIVITY]
                     },
-                    (err, req, res) => {
+                    (err, response) => {
+                        err = err || response.error;
+
                         assert.isNull(err);
                         callback();
                     }
@@ -105,11 +107,14 @@ suite('ActivitiesGrpcServiceV1', () => {
                         filter: null,
                         paging: null
                     },
-                    (err, req, res, page) => {
+                    (err, response) => {
+                        err = err || response.error;
+                        let page = response ? response.page : null;
+
                         assert.isNull(err);
 
                         assert.isObject(page);
-                        assert.isTrue(page.data.length > 2);
+                        assert.equal(page.data.length, 1);
 
                         let activity = page.data[0];
                         assert.equal(activity.type, ACTIVITY.type);

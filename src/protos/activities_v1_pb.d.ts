@@ -1,5 +1,5 @@
-// package: activities
-// file: party_activities_v1.proto
+// package: activities_v1
+// file: activities_v1.proto
 
 import * as jspb from "google-protobuf";
 
@@ -252,10 +252,10 @@ export class PartyActivityLogRequest extends jspb.Message {
   getCorrelationId(): string;
   setCorrelationId(value: string): void;
 
-  hasPartyActivity(): boolean;
-  clearPartyActivity(): void;
-  getPartyActivity(): PartyActivity | undefined;
-  setPartyActivity(value?: PartyActivity): void;
+  hasActivity(): boolean;
+  clearActivity(): void;
+  getActivity(): PartyActivity | undefined;
+  setActivity(value?: PartyActivity): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PartyActivityLogRequest.AsObject;
@@ -270,7 +270,7 @@ export class PartyActivityLogRequest extends jspb.Message {
 export namespace PartyActivityLogRequest {
   export type AsObject = {
     correlationId: string,
-    partyActivity?: PartyActivity.AsObject,
+    activity?: PartyActivity.AsObject,
   }
 }
 
@@ -280,10 +280,10 @@ export class PartyActivityObjectReply extends jspb.Message {
   getError(): ErrorDescription | undefined;
   setError(value?: ErrorDescription): void;
 
-  hasPartyActivity(): boolean;
-  clearPartyActivity(): void;
-  getPartyActivity(): PartyActivity | undefined;
-  setPartyActivity(value?: PartyActivity): void;
+  hasActivity(): boolean;
+  clearActivity(): void;
+  getActivity(): PartyActivity | undefined;
+  setActivity(value?: PartyActivity): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PartyActivityObjectReply.AsObject;
@@ -298,7 +298,7 @@ export class PartyActivityObjectReply extends jspb.Message {
 export namespace PartyActivityObjectReply {
   export type AsObject = {
     error?: ErrorDescription.AsObject,
-    partyActivity?: PartyActivity.AsObject,
+    activity?: PartyActivity.AsObject,
   }
 }
 
@@ -306,10 +306,10 @@ export class PartyActivityBatchRequest extends jspb.Message {
   getCorrelationId(): string;
   setCorrelationId(value: string): void;
 
-  clearPartyActivitiesList(): void;
-  getPartyActivitiesList(): Array<PartyActivity>;
-  setPartyActivitiesList(value: Array<PartyActivity>): void;
-  addPartyActivities(value?: PartyActivity, index?: number): PartyActivity;
+  clearActivitiesList(): void;
+  getActivitiesList(): Array<PartyActivity>;
+  setActivitiesList(value: Array<PartyActivity>): void;
+  addActivities(value?: PartyActivity, index?: number): PartyActivity;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PartyActivityBatchRequest.AsObject;
@@ -324,7 +324,7 @@ export class PartyActivityBatchRequest extends jspb.Message {
 export namespace PartyActivityBatchRequest {
   export type AsObject = {
     correlationId: string,
-    partyActivitiesList: Array<PartyActivity.AsObject>,
+    activitiesList: Array<PartyActivity.AsObject>,
   }
 }
 

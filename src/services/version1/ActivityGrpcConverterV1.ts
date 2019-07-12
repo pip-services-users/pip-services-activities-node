@@ -1,7 +1,8 @@
 let _ = require('lodash');
-let messages = require('../../../../src/protos/party_activities_v1_pb');
+let messages = require('../../../../src/protos/activities_v1_pb');
 
 import { DataPage } from 'pip-services3-commons-node';
+import { PagingParams } from 'pip-services3-commons-node';
 import { StringConverter } from 'pip-services3-commons-node';
 import { DateTimeConverter } from 'pip-services3-commons-node';
 import { ErrorDescriptionFactory } from 'pip-services3-commons-node';
@@ -19,7 +20,7 @@ export class ActivityGrpcConverterV1 {
         let description = ErrorDescriptionFactory.create(err);
         let obj = new messages.ErrorDescription();
 
-        obj.getType(description.type);
+        obj.setType(description.type);
         obj.setCategory(description.category);
         obj.setCode(description.code);
         obj.setCorrelationId(description.correlation_id);
@@ -66,6 +67,31 @@ export class ActivityGrpcConverterV1 {
         return values;
     }
 
+    public static fromPagingParams(paging: PagingParams): any {
+        if (paging == null) return null;
+
+        let obj = new messages.PagingParams();
+
+        obj.setSkip(paging.skip);
+        obj.setTake(paging.take);
+        obj.setTotal(paging.total);
+
+        return obj;
+    }
+
+    public static toPagingParams(obj: any): PagingParams {
+        if (obj == null)
+            return null;
+
+        let paging: PagingParams = new PagingParams(
+            obj.getSkip(),
+            obj.getTake(),
+            obj.getTotal()
+        );
+
+        return paging;
+    }
+
     public static fromReference(reference: ReferenceV1): any {
         if (reference == null) return null;
 
@@ -93,15 +119,16 @@ export class ActivityGrpcConverterV1 {
     public static fromReferences(references: ReferenceV1[]): any {
         if (references == null) return null;
 
-        let obj = new messages.Reference();
         let a = []
 
         references.forEach(ref => {
+            let obj = new messages.Reference();
+
             obj.setId(ref.id);
             obj.setType(ref.type);
             obj.setName(ref.name);
 
-            a.push(ref);
+            a.push(obj);
         });
 
         return a;
@@ -125,18 +152,19 @@ export class ActivityGrpcConverterV1 {
         return references;
     }
 
-    public static fromPartyActivity(partyActivity: PartyActivityV1): any {
-        if (partyActivity == null) return null;
+    public static fromPartyActivity(activity: PartyActivityV1): any {
+        if (activity == null) return null;
 
         let obj = new messages.PartyActivity();
 
-        obj.setId(partyActivity.id);
-        obj.setTime(StringConverter.toString(partyActivity.time));
-        obj.setParty(ActivityGrpcConverterV1.toReference(partyActivity.party));
-        obj.setRefItem(ActivityGrpcConverterV1.toReference(partyActivity.ref_item));
-        obj.setRefParents(ActivityGrpcConverterV1.toReferences(partyActivity.ref_parents)); // ReferenceV1[]
-        obj.setRefParty(ActivityGrpcConverterV1.toReference(partyActivity.ref_party));
-        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), partyActivity.details);
+        obj.setId(activity.id);
+        obj.setTime(StringConverter.toString(activity.time));
+        obj.setType(activity.type);
+        obj.setParty(ActivityGrpcConverterV1.fromReference(activity.party));
+        obj.setRefItem(ActivityGrpcConverterV1.fromReference(activity.ref_item));
+        obj.setRefParentsList(ActivityGrpcConverterV1.fromReferences(activity.ref_parents)); // ReferenceV1[]
+        obj.setRefParty(ActivityGrpcConverterV1.fromReference(activity.ref_party));
+        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), activity.details);
 
         return obj;
     }
@@ -144,30 +172,30 @@ export class ActivityGrpcConverterV1 {
     public static toPartyActivity(obj: any): PartyActivityV1 {
         if (obj == null) return null;
 
-        let partyActivity: PartyActivityV1 = {
+        let activity: PartyActivityV1 = {
             id: obj.getId(),
             time: DateTimeConverter.toDateTime(obj.getTime()),
             type: obj.getType(),
-            party: ActivityGrpcConverterV1.fromReference(obj.getParty()),
-            ref_item: ActivityGrpcConverterV1.fromReference(obj.getRefItem()),
-            ref_parents: ActivityGrpcConverterV1.fromReferences(obj.getRefParents()), // Reference[]
-            ref_party: ActivityGrpcConverterV1.fromReference(obj.getRefParty()),
+            party: ActivityGrpcConverterV1.toReference(obj.getParty()),
+            ref_item: ActivityGrpcConverterV1.toReference(obj.getRefItem()),
+            ref_parents: ActivityGrpcConverterV1.toReferences(obj.getRefParentsList()), // Reference[]
+            ref_party: ActivityGrpcConverterV1.toReference(obj.getRefParty()),
             details: ActivityGrpcConverterV1.getMap(obj.getDetailsMap())
         };
 
-        return partyActivity;
+        return activity;
     }
 
     public static toPartyActivities(objArr: any): PartyActivityV1[] {
         if (objArr == null) return null;
 
-        let partyActivities = []
+        let activities = []
 
         objArr.forEach(obj => {
-            partyActivities.push(ActivityGrpcConverterV1.toPartyActivity(obj));
+            activities.push(ActivityGrpcConverterV1.toPartyActivity(obj));
         });
 
-        return partyActivities;
+        return activities;
     }
 
     public static fromPartyActivityPage(page: DataPage<PartyActivityV1>): any {

@@ -31,7 +31,7 @@
     "watch": "tsc --watch",
     "launch": "node run",
     "relaunch": "tsc && node run",
-    "protogen1": "cd src/protos && protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./ --ts_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` party_activities_v1.proto",
+    "protogen1": "cd src/protos && protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./ --ts_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` activities_v1.proto",
     "test": "mocha -t 10000 -R spec -u tdd --recursive ./obj/test",
     "retest": "tsc && mocha -t 10000 -R spec -u tdd --recursive ./obj/test",
     "benchmark": "matcha -R clean -I tdd ./obj/benchmark/run.js",
@@ -49,6 +49,8 @@
     "pip-services3-grpc-node": "^3.0.0"
   },
   "devDependencies": {
+    "google-protobuf": "^3.7.1",
+    "ts-protoc-gen": "^0.9.0",
     "@types/async": "^2.0.0",
     "@types/chai": "*",
     "@types/lodash": "^4.0.0",
@@ -57,10 +59,7 @@
     "@types/mongoose": "^4.7.4",
     "@types/node": "*",
     "chai": "*",
-    "google-protobuf": "^3.8.0",
-    "matcha": "*",
     "mocha": "*",
-    "restify": "^4.3.0",
-    "ts-protoc-gen": "^0.9.0"
+    "restify": "^4.3.0"
   }
 }

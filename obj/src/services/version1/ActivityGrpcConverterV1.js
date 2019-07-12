@@ -1,18 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let _ = require('lodash');
-let messages = require('../../../../src/protos/party_activities_v1_pb');
+let messages = require('../../../../src/protos/activities_v1_pb');
 const pip_services3_commons_node_1 = require("pip-services3-commons-node");
 const pip_services3_commons_node_2 = require("pip-services3-commons-node");
 const pip_services3_commons_node_3 = require("pip-services3-commons-node");
 const pip_services3_commons_node_4 = require("pip-services3-commons-node");
+const pip_services3_commons_node_5 = require("pip-services3-commons-node");
 class ActivityGrpcConverterV1 {
     static fromError(err) {
         if (err == null)
             return null;
-        let description = pip_services3_commons_node_3.ErrorDescriptionFactory.create(err);
+        let description = pip_services3_commons_node_4.ErrorDescriptionFactory.create(err);
         let obj = new messages.ErrorDescription();
-        obj.getType(description.type);
+        obj.setType(description.type);
         obj.setCategory(description.category);
         obj.setCode(description.code);
         obj.setCorrelationId(description.correlation_id);
@@ -37,7 +38,7 @@ class ActivityGrpcConverterV1 {
             stack_trace: obj.getStackTrace(),
             details: ActivityGrpcConverterV1.getMap(obj.getDetailsMap())
         };
-        return pip_services3_commons_node_4.ApplicationExceptionFactory.create(description);
+        return pip_services3_commons_node_5.ApplicationExceptionFactory.create(description);
     }
     static setMap(map, values) {
         if (values == null)
@@ -51,6 +52,21 @@ class ActivityGrpcConverterV1 {
         let values = {};
         ActivityGrpcConverterV1.setMap(values, map);
         return values;
+    }
+    static fromPagingParams(paging) {
+        if (paging == null)
+            return null;
+        let obj = new messages.PagingParams();
+        obj.setSkip(paging.skip);
+        obj.setTake(paging.take);
+        obj.setTotal(paging.total);
+        return obj;
+    }
+    static toPagingParams(obj) {
+        if (obj == null)
+            return null;
+        let paging = new pip_services3_commons_node_1.PagingParams(obj.getSkip(), obj.getTake(), obj.getTotal());
+        return paging;
     }
     static fromReference(reference) {
         if (reference == null)
@@ -74,13 +90,13 @@ class ActivityGrpcConverterV1 {
     static fromReferences(references) {
         if (references == null)
             return null;
-        let obj = new messages.Reference();
         let a = [];
         references.forEach(ref => {
+            let obj = new messages.Reference();
             obj.setId(ref.id);
             obj.setType(ref.type);
             obj.setName(ref.name);
-            a.push(ref);
+            a.push(obj);
         });
         return a;
     }
@@ -98,42 +114,43 @@ class ActivityGrpcConverterV1 {
         });
         return references;
     }
-    static fromPartyActivity(partyActivity) {
-        if (partyActivity == null)
+    static fromPartyActivity(activity) {
+        if (activity == null)
             return null;
         let obj = new messages.PartyActivity();
-        obj.setId(partyActivity.id);
-        obj.setTime(pip_services3_commons_node_1.StringConverter.toString(partyActivity.time));
-        obj.setParty(ActivityGrpcConverterV1.toReference(partyActivity.party));
-        obj.setRefItem(ActivityGrpcConverterV1.toReference(partyActivity.ref_item));
-        obj.setRefParents(ActivityGrpcConverterV1.toReferences(partyActivity.ref_parents)); // ReferenceV1[]
-        obj.setRefParty(ActivityGrpcConverterV1.toReference(partyActivity.ref_party));
-        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), partyActivity.details);
+        obj.setId(activity.id);
+        obj.setTime(pip_services3_commons_node_2.StringConverter.toString(activity.time));
+        obj.setType(activity.type);
+        obj.setParty(ActivityGrpcConverterV1.fromReference(activity.party));
+        obj.setRefItem(ActivityGrpcConverterV1.fromReference(activity.ref_item));
+        obj.setRefParentsList(ActivityGrpcConverterV1.fromReferences(activity.ref_parents)); // ReferenceV1[]
+        obj.setRefParty(ActivityGrpcConverterV1.fromReference(activity.ref_party));
+        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), activity.details);
         return obj;
     }
     static toPartyActivity(obj) {
         if (obj == null)
             return null;
-        let partyActivity = {
+        let activity = {
             id: obj.getId(),
-            time: pip_services3_commons_node_2.DateTimeConverter.toDateTime(obj.getTime()),
+            time: pip_services3_commons_node_3.DateTimeConverter.toDateTime(obj.getTime()),
             type: obj.getType(),
-            party: ActivityGrpcConverterV1.fromReference(obj.getParty()),
-            ref_item: ActivityGrpcConverterV1.fromReference(obj.getRefItem()),
-            ref_parents: ActivityGrpcConverterV1.fromReferences(obj.getRefParents()),
-            ref_party: ActivityGrpcConverterV1.fromReference(obj.getRefParty()),
+            party: ActivityGrpcConverterV1.toReference(obj.getParty()),
+            ref_item: ActivityGrpcConverterV1.toReference(obj.getRefItem()),
+            ref_parents: ActivityGrpcConverterV1.toReferences(obj.getRefParentsList()),
+            ref_party: ActivityGrpcConverterV1.toReference(obj.getRefParty()),
             details: ActivityGrpcConverterV1.getMap(obj.getDetailsMap())
         };
-        return partyActivity;
+        return activity;
     }
     static toPartyActivities(objArr) {
         if (objArr == null)
             return null;
-        let partyActivities = [];
+        let activities = [];
         objArr.forEach(obj => {
-            partyActivities.push(ActivityGrpcConverterV1.toPartyActivity(obj));
+            activities.push(ActivityGrpcConverterV1.toPartyActivity(obj));
         });
-        return partyActivities;
+        return activities;
     }
     static fromPartyActivityPage(page) {
         if (page == null)

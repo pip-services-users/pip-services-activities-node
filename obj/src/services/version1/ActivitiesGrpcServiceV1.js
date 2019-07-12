@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let _ = require('lodash');
-let services = require('../../../../src/protos/party_activities_v1_grpc_pb');
-let messages = require('../../../../src/protos/party_activities_v1_pb');
+let services = require('../../../../src/protos/activities_v1_grpc_pb');
+let messages = require('../../../../src/protos/activities_v1_pb');
 const pip_services3_commons_node_1 = require("pip-services3-commons-node");
 const pip_services3_commons_node_2 = require("pip-services3-commons-node");
-const pip_services3_commons_node_3 = require("pip-services3-commons-node");
 const pip_services3_grpc_node_1 = require("pip-services3-grpc-node");
 const ActivityGrpcConverterV1_1 = require("./ActivityGrpcConverterV1");
 class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     constructor() {
-        super(services.AccountsService);
+        super(services.ActivitiesService);
         this._dependencyResolver.put('controller', new pip_services3_commons_node_1.Descriptor("pip-services-activities", "controller", "default", "*", "*"));
     }
     setReferences(references) {
@@ -19,8 +18,9 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     }
     getPartyActivities(call, callback) {
         let correlationId = call.request.getCorrelationId();
-        let filter = pip_services3_commons_node_2.FilterParams.fromValue(call.request.filterMap);
-        let paging = pip_services3_commons_node_3.PagingParams.fromValue(call.request.paging);
+        let filter = new pip_services3_commons_node_2.FilterParams();
+        ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.setMap(call.request.getFilterMap(), filter);
+        let paging = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPagingParams(call.request.getPaging());
         this._controller.getPartyActivities(correlationId, filter, paging, (err, result) => {
             let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
             let page = err == null ? ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromPartyActivityPage(result) : null;
@@ -32,7 +32,7 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     }
     logPartyActivity(call, callback) {
         let correlationId = call.request.getCorrelationId();
-        let activity = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivity(call.request.getPartyActivity());
+        let activity = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivity(call.request.getActivity());
         this._controller.logPartyActivity(correlationId, activity, (err, result) => {
             let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
             let activity = err == null ? ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromPartyActivity(result) : null;
@@ -45,16 +45,22 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     }
     batchPartyActivities(call, callback) {
         let correlationId = call.request.getCorrelationId();
-        let activities = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivities(call.request.getPartyActivity());
+        let activities = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
         this._controller.batchPartyActivities(correlationId, activities, (err) => {
-            callback(err);
+            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
+            let response = new messages.PartyActivityOnlyErrorReply();
+            response.setError(error);
+            callback(err, response);
         });
     }
     deletePartyActivities(call, callback) {
         let correlationId = call.request.getCorrelationId();
         let filter = pip_services3_commons_node_2.FilterParams.fromValue(call.request.filterMap);
         this._controller.deletePartyActivities(correlationId, filter, (err) => {
-            callback(err);
+            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
+            let response = new messages.PartyActivityOnlyErrorReply();
+            response.setError(error);
+            callback(err, response);
         });
     }
     register() {

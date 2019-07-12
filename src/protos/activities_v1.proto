@@ -15,11 +15,11 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "pip-services.users.activities";
-option java_outer_classname = "ActivitiesProto";
-option objc_class_prefix = "ACTIVITIES_CMD";
+option java_package = "pip-services.users.activities.version1";
+option java_outer_classname = "ActivitiesProtoV1";
+option objc_class_prefix = "ACTIVITIES_CMD_V1";
 
-package activities;
+package activities_v1;
 
 message ErrorDescription {
   string type = 1;
@@ -69,7 +69,7 @@ message PartyActivityPage {
 }
 
 // The activities service definition.
-service PartyActivities {
+service Activities {
   rpc get_party_activities (PartyActivityPageRequest) returns (PartyActivityPageReply) {}
   rpc log_party_activity (PartyActivityLogRequest) returns (PartyActivityObjectReply) {}
   rpc batch_party_activities (PartyActivityBatchRequest) returns (PartyActivityOnlyErrorReply) {}
@@ -92,19 +92,19 @@ message PartyActivityPageReply {
 // The request message containing the party_activity page request.
 message PartyActivityLogRequest {
   string correlation_id = 1;
-  PartyActivity party_activity = 2;
+  PartyActivity activity = 2;
 }
 
 // The response message containing the party_activity object response
 message PartyActivityObjectReply {
   ErrorDescription error = 1;
-  PartyActivity party_activity = 2;
+  PartyActivity activity = 2;
 }
 
 // The request message containing the party_activity page request.
 message PartyActivityBatchRequest {
   string correlation_id = 1;
-  repeated PartyActivity party_activities = 2;
+  repeated PartyActivity activities = 2;
 }
 
 // The request message containing the party_activity page request.

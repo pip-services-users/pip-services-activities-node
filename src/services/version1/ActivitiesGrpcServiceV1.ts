@@ -1,6 +1,6 @@
 let _ = require('lodash');
-let services = require('../../../../src/protos/party_activities_v1_grpc_pb');
-let messages = require('../../../../src/protos/party_activities_v1_pb');
+let services = require('../../../../src/protos/activities_v1_grpc_pb');
+let messages = require('../../../../src/protos/activities_v1_pb');
 
 import { IReferences } from 'pip-services3-commons-node';
 import { Descriptor } from 'pip-services3-commons-node';
@@ -20,7 +20,7 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
     private _controller: IActivitiesController;
 
     public constructor() {
-        super(services.AccountsService);
+        super(services.ActivitiesService);
         this._dependencyResolver.put('controller', new Descriptor("pip-services-activities", "controller", "default", "*", "*"));
     }
 
@@ -31,8 +31,9 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
 
     private getPartyActivities(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
-        let filter = FilterParams.fromValue(call.request.filterMap);
-        let paging = PagingParams.fromValue(call.request.paging);
+        let filter = new FilterParams();
+        ActivityGrpcConverterV1.setMap(call.request.getFilterMap(), filter);
+        let paging = ActivityGrpcConverterV1.toPagingParams(call.request.getPaging());
 
         this._controller.getPartyActivities(
             correlationId,
@@ -53,7 +54,7 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
 
     private logPartyActivity(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
-        let activity = ActivityGrpcConverterV1.toPartyActivity(call.request.getPartyActivity());
+        let activity = ActivityGrpcConverterV1.toPartyActivity(call.request.getActivity());
 
         this._controller.logPartyActivity(
             correlationId,
@@ -74,13 +75,18 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
 
     private batchPartyActivities(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
-        let activities = ActivityGrpcConverterV1.toPartyActivities(call.request.getPartyActivity());
+        let activities = ActivityGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
 
         this._controller.batchPartyActivities(
             correlationId,
             activities,
             (err) => {
-                callback(err);
+                let error = ActivityGrpcConverterV1.fromError(err);
+
+                let response = new messages.PartyActivityOnlyErrorReply();
+                response.setError(error);
+
+                callback(err, response);
             }
         )
     }
@@ -93,7 +99,12 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
             correlationId,
             filter,
             (err) => {
-                callback(err);
+                let error = ActivityGrpcConverterV1.fromError(err);
+
+                let response = new messages.PartyActivityOnlyErrorReply();
+                response.setError(error);
+
+                callback(err, response);
             }
         )
     }

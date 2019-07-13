@@ -32,14 +32,14 @@ export class ActivitiesCouchbasePersistence
         let toTime = filter.getAsNullableDateTime('to_time');
 
         // Process include_types filter
-        if (!_.isArray(includeTypes))
-            includeTypes = ('' + includeTypes).split(',');
+        if (_.isString(includeTypes))
+            includeTypes = includeTypes.split(',');
         if (!_.isArray(includeTypes))
             includeTypes = null;
 
         // Process exclude_types filter
-        if (!_.isArray(excludeTypes))
-            excludeTypes = ('' + excludeTypes).split(',');
+        if (_.isString(excludeTypes))
+            excludeTypes = excludeTypes.split(',');
         if (!_.isArray(excludeTypes))
             excludeTypes = null;
 
@@ -66,9 +66,9 @@ export class ActivitiesCouchbasePersistence
         if (refPartyId != null)
             filters.push("ref_party.id='" + refPartyId + "'");
         if (fromTime != null)
-            filters.push("create_time>='" + fromTime + "'");
+            filters.push("time>='" + fromTime + "'");
         if (toTime != null)
-            filters.push("create_time<'" + toTime + "'");
+            filters.push("time<'" + toTime + "'");
 
 
         return filters.length > 0 ? filters.join(" AND ") : null;
@@ -77,7 +77,7 @@ export class ActivitiesCouchbasePersistence
     public getPageByFilter(correlationId: string, filter: FilterParams, paging: PagingParams,
         callback: (err: any, page: DataPage<PartyActivityV1>) => void) {
         let criteria = this.composeFilter(filter);
-        super.getPageByFilter(correlationId, criteria, paging, '-time', { parent_ids: 0 }, callback);
+        super.getPageByFilter(correlationId, criteria, paging, 'time DESC', null, callback);
     }
 
     public create(correlationId: string, item: PartyActivityV1, callback: (err: any, item: PartyActivityV1) => void): void {

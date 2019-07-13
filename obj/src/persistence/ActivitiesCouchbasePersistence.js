@@ -22,13 +22,13 @@ class ActivitiesCouchbasePersistence extends pip_services3_couchbase_node_1.Iden
         let fromTime = filter.getAsNullableDateTime('from_time');
         let toTime = filter.getAsNullableDateTime('to_time');
         // Process include_types filter
-        if (!_.isArray(includeTypes))
-            includeTypes = ('' + includeTypes).split(',');
+        if (_.isString(includeTypes))
+            includeTypes = includeTypes.split(',');
         if (!_.isArray(includeTypes))
             includeTypes = null;
         // Process exclude_types filter
-        if (!_.isArray(excludeTypes))
-            excludeTypes = ('' + excludeTypes).split(',');
+        if (_.isString(excludeTypes))
+            excludeTypes = excludeTypes.split(',');
         if (!_.isArray(excludeTypes))
             excludeTypes = null;
         let filters = [];
@@ -54,14 +54,14 @@ class ActivitiesCouchbasePersistence extends pip_services3_couchbase_node_1.Iden
         if (refPartyId != null)
             filters.push("ref_party.id='" + refPartyId + "'");
         if (fromTime != null)
-            filters.push("create_time>='" + fromTime + "'");
+            filters.push("time>='" + fromTime + "'");
         if (toTime != null)
-            filters.push("create_time<'" + toTime + "'");
+            filters.push("time<'" + toTime + "'");
         return filters.length > 0 ? filters.join(" AND ") : null;
     }
     getPageByFilter(correlationId, filter, paging, callback) {
         let criteria = this.composeFilter(filter);
-        super.getPageByFilter(correlationId, criteria, paging, '-time', { parent_ids: 0 }, callback);
+        super.getPageByFilter(correlationId, criteria, paging, 'time DESC', null, callback);
     }
     create(correlationId, item, callback) {
         item.ref_parents = item.ref_parents || [];

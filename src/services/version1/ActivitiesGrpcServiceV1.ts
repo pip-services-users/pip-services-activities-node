@@ -14,7 +14,7 @@ import { PagingParamsSchema } from 'pip-services3-commons-node';
 import { GrpcService } from 'pip-services3-grpc-node';
 
 import { IActivitiesController } from '../../logic/IActivitiesController';
-import { ActivityGrpcConverterV1 } from './ActivityGrpcConverterV1';
+import { ActivitiesGrpcConverterV1 } from './ActivitiesGrpcConverterV1';
 
 export class ActivitiesGrpcServiceV1 extends GrpcService {
     private _controller: IActivitiesController;
@@ -32,16 +32,16 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
     private getPartyActivities(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
         let filter = new FilterParams();
-        ActivityGrpcConverterV1.setMap(call.request.getFilterMap(), filter);
-        let paging = ActivityGrpcConverterV1.toPagingParams(call.request.getPaging());
+        ActivitiesGrpcConverterV1.setMap(filter, call.request.getFilterMap());
+        let paging = ActivitiesGrpcConverterV1.toPagingParams(call.request.getPaging());
 
         this._controller.getPartyActivities(
             correlationId,
             filter,
             paging,
             (err, result) => {
-                let error = ActivityGrpcConverterV1.fromError(err);
-                let page = err == null ? ActivityGrpcConverterV1.fromPartyActivityPage(result) : null;
+                let error = ActivitiesGrpcConverterV1.fromError(err);
+                let page = err == null ? ActivitiesGrpcConverterV1.fromPartyActivityPage(result) : null;
 
                 let response = new messages.PartyActivityPageReply();
                 response.setError(error);
@@ -54,14 +54,14 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
 
     private logPartyActivity(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
-        let activity = ActivityGrpcConverterV1.toPartyActivity(call.request.getActivity());
+        let activity = ActivitiesGrpcConverterV1.toPartyActivity(call.request.getActivity());
 
         this._controller.logPartyActivity(
             correlationId,
             activity,
             (err, result) => {
-                let error = ActivityGrpcConverterV1.fromError(err);
-                let activity = err == null ? ActivityGrpcConverterV1.fromPartyActivity(result) : null;
+                let error = ActivitiesGrpcConverterV1.fromError(err);
+                let activity = err == null ? ActivitiesGrpcConverterV1.fromPartyActivity(result) : null;
 
                 let response = new messages.PartyActivityObjectReply();
                 response.setError(error);
@@ -75,13 +75,13 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
 
     private batchPartyActivities(call: any, callback: any) {
         let correlationId = call.request.getCorrelationId();
-        let activities = ActivityGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
+        let activities = ActivitiesGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
 
         this._controller.batchPartyActivities(
             correlationId,
             activities,
             (err) => {
-                let error = ActivityGrpcConverterV1.fromError(err);
+                let error = ActivitiesGrpcConverterV1.fromError(err);
 
                 let response = new messages.PartyActivityOnlyErrorReply();
                 response.setError(error);
@@ -99,7 +99,7 @@ export class ActivitiesGrpcServiceV1 extends GrpcService {
             correlationId,
             filter,
             (err) => {
-                let error = ActivityGrpcConverterV1.fromError(err);
+                let error = ActivitiesGrpcConverterV1.fromError(err);
 
                 let response = new messages.PartyActivityOnlyErrorReply();
                 response.setError(error);

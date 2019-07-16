@@ -6,7 +6,7 @@ let messages = require('../../../../src/protos/activities_v1_pb');
 const pip_services3_commons_node_1 = require("pip-services3-commons-node");
 const pip_services3_commons_node_2 = require("pip-services3-commons-node");
 const pip_services3_grpc_node_1 = require("pip-services3-grpc-node");
-const ActivityGrpcConverterV1_1 = require("./ActivityGrpcConverterV1");
+const ActivitiesGrpcConverterV1_1 = require("./ActivitiesGrpcConverterV1");
 class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     constructor() {
         super(services.ActivitiesService);
@@ -19,11 +19,11 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     getPartyActivities(call, callback) {
         let correlationId = call.request.getCorrelationId();
         let filter = new pip_services3_commons_node_2.FilterParams();
-        ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.setMap(call.request.getFilterMap(), filter);
-        let paging = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPagingParams(call.request.getPaging());
+        ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.setMap(filter, call.request.getFilterMap());
+        let paging = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.toPagingParams(call.request.getPaging());
         this._controller.getPartyActivities(correlationId, filter, paging, (err, result) => {
-            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
-            let page = err == null ? ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromPartyActivityPage(result) : null;
+            let error = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromError(err);
+            let page = err == null ? ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromPartyActivityPage(result) : null;
             let response = new messages.PartyActivityPageReply();
             response.setError(error);
             response.setPage(page);
@@ -32,10 +32,10 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     }
     logPartyActivity(call, callback) {
         let correlationId = call.request.getCorrelationId();
-        let activity = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivity(call.request.getActivity());
+        let activity = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.toPartyActivity(call.request.getActivity());
         this._controller.logPartyActivity(correlationId, activity, (err, result) => {
-            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
-            let activity = err == null ? ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromPartyActivity(result) : null;
+            let error = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromError(err);
+            let activity = err == null ? ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromPartyActivity(result) : null;
             let response = new messages.PartyActivityObjectReply();
             response.setError(error);
             if (result)
@@ -45,9 +45,9 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
     }
     batchPartyActivities(call, callback) {
         let correlationId = call.request.getCorrelationId();
-        let activities = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
+        let activities = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.toPartyActivities(call.request.getActivitiesList());
         this._controller.batchPartyActivities(correlationId, activities, (err) => {
-            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
+            let error = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromError(err);
             let response = new messages.PartyActivityOnlyErrorReply();
             response.setError(error);
             callback(err, response);
@@ -57,7 +57,7 @@ class ActivitiesGrpcServiceV1 extends pip_services3_grpc_node_1.GrpcService {
         let correlationId = call.request.getCorrelationId();
         let filter = pip_services3_commons_node_2.FilterParams.fromValue(call.request.filterMap);
         this._controller.deletePartyActivities(correlationId, filter, (err) => {
-            let error = ActivityGrpcConverterV1_1.ActivityGrpcConverterV1.fromError(err);
+            let error = ActivitiesGrpcConverterV1_1.ActivitiesGrpcConverterV1.fromError(err);
             let response = new messages.PartyActivityOnlyErrorReply();
             response.setError(error);
             callback(err, response);

@@ -12,7 +12,7 @@ import { ApplicationExceptionFactory } from 'pip-services3-commons-node';
 import { PartyActivityV1 } from '../../data/version1/PartyActivityV1';
 import { ReferenceV1 } from '../../data/version1/ReferenceV1';
 
-export class ActivityGrpcConverterV1 {
+export class ActivitiesGrpcConverterV1 {
 
     public static fromError(err: any): any {
         if (err == null) return null;
@@ -28,7 +28,7 @@ export class ActivityGrpcConverterV1 {
         obj.setMessage(description.message);
         obj.setCause(description.cause);
         obj.setStackTrace(description.stack_trace);
-        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), description.details);
+        ActivitiesGrpcConverterV1.setMap(obj.getDetailsMap(), description.details);
 
         return obj;
     }
@@ -46,7 +46,7 @@ export class ActivityGrpcConverterV1 {
             message: obj.getMessage(),
             cause: obj.getCause(),
             stack_trace: obj.getStackTrace(),
-            details: ActivityGrpcConverterV1.getMap(obj.getDetailsMap())
+            details: ActivitiesGrpcConverterV1.getMap(obj.getDetailsMap())
         }
 
         return ApplicationExceptionFactory.create(description);
@@ -55,15 +55,25 @@ export class ActivityGrpcConverterV1 {
     public static setMap(map: any, values: any): void {
         if (values == null) return;
 
-        for (let propName in values) {
-            if (values.hasOwnProperty(propName))
-                map[propName] = values[propName];
+        if (_.isFunction(values.toObject))
+            values = values.toObject();
+
+        if (_.isArray(values)) {
+            for (let entry of values) {
+                if (_.isArray(entry))
+                    map[entry[0]] = entry[1];
+            }
+        } else {
+            for (let propName in values) {
+                if (values.hasOwnProperty(propName))
+                    map[propName] = values[propName];
+            }
         }
     }
 
     public static getMap(map: any): any {
         let values = {};
-        ActivityGrpcConverterV1.setMap(values, map);
+        ActivitiesGrpcConverterV1.setMap(values, map);
         return values;
     }
 
@@ -160,11 +170,11 @@ export class ActivityGrpcConverterV1 {
         obj.setId(activity.id);
         obj.setTime(StringConverter.toString(activity.time));
         obj.setType(activity.type);
-        obj.setParty(ActivityGrpcConverterV1.fromReference(activity.party));
-        obj.setRefItem(ActivityGrpcConverterV1.fromReference(activity.ref_item));
-        obj.setRefParentsList(ActivityGrpcConverterV1.fromReferences(activity.ref_parents)); // ReferenceV1[]
-        obj.setRefParty(ActivityGrpcConverterV1.fromReference(activity.ref_party));
-        ActivityGrpcConverterV1.setMap(obj.getDetailsMap(), activity.details);
+        obj.setParty(ActivitiesGrpcConverterV1.fromReference(activity.party));
+        obj.setRefItem(ActivitiesGrpcConverterV1.fromReference(activity.ref_item));
+        obj.setRefParentsList(ActivitiesGrpcConverterV1.fromReferences(activity.ref_parents)); // ReferenceV1[]
+        obj.setRefParty(ActivitiesGrpcConverterV1.fromReference(activity.ref_party));
+        ActivitiesGrpcConverterV1.setMap(obj.getDetailsMap(), activity.details);
 
         return obj;
     }
@@ -176,11 +186,11 @@ export class ActivityGrpcConverterV1 {
             id: obj.getId(),
             time: DateTimeConverter.toDateTime(obj.getTime()),
             type: obj.getType(),
-            party: ActivityGrpcConverterV1.toReference(obj.getParty()),
-            ref_item: ActivityGrpcConverterV1.toReference(obj.getRefItem()),
-            ref_parents: ActivityGrpcConverterV1.toReferences(obj.getRefParentsList()), // Reference[]
-            ref_party: ActivityGrpcConverterV1.toReference(obj.getRefParty()),
-            details: ActivityGrpcConverterV1.getMap(obj.getDetailsMap())
+            party: ActivitiesGrpcConverterV1.toReference(obj.getParty()),
+            ref_item: ActivitiesGrpcConverterV1.toReference(obj.getRefItem()),
+            ref_parents: ActivitiesGrpcConverterV1.toReferences(obj.getRefParentsList()), // Reference[]
+            ref_party: ActivitiesGrpcConverterV1.toReference(obj.getRefParty()),
+            details: ActivitiesGrpcConverterV1.getMap(obj.getDetailsMap())
         };
 
         return activity;
@@ -192,7 +202,7 @@ export class ActivityGrpcConverterV1 {
         let activities = []
 
         objArr.forEach(obj => {
-            activities.push(ActivityGrpcConverterV1.toPartyActivity(obj));
+            activities.push(ActivitiesGrpcConverterV1.toPartyActivity(obj));
         });
 
         return activities;
@@ -204,7 +214,7 @@ export class ActivityGrpcConverterV1 {
         let obj = new messages.PartyActivityPage();
 
         obj.setTotal(page.total);
-        let data = _.map(page.data, ActivityGrpcConverterV1.fromPartyActivity);
+        let data = _.map(page.data, ActivitiesGrpcConverterV1.fromPartyActivity);
         obj.setDataList(data);
 
         return obj;
@@ -213,7 +223,7 @@ export class ActivityGrpcConverterV1 {
     public static toPartyActivityPage(obj: any): DataPage<PartyActivityV1> {
         if (obj == null) return null;
 
-        let data = _.map(obj.getDataList(), ActivityGrpcConverterV1.toPartyActivity);
+        let data = _.map(obj.getDataList(), ActivitiesGrpcConverterV1.toPartyActivity);
         let page: DataPage<PartyActivityV1> = {
             total: obj.getTotal(),
             data: data

@@ -13,7 +13,7 @@ export class ActivitiesCouchbasePersistence
     extends IdentifiableCouchbasePersistence<PartyActivityV1, string> implements IActivitiesPersistence {
 
     constructor() {
-        super('party_activities');
+        super('users', 'party_activities');
     }
 
     private composeFilter(filter: FilterParams): any {

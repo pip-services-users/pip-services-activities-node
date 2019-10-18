@@ -41,6 +41,6 @@ class ActivitiesController {
         this._persistence.deleteByFilter(correlationId, filter, callback);
     }
 }
-ActivitiesController._defaultConfig = pip_services3_commons_node_1.ConfigParams.fromTuples('dependencies.persistence', 'pip-services-activities:persistence:*:*:1.0');
 exports.ActivitiesController = ActivitiesController;
+ActivitiesController._defaultConfig = pip_services3_commons_node_1.ConfigParams.fromTuples('dependencies.persistence', 'pip-services-activities:persistence:*:*:1.0');
 //# sourceMappingURL=ActivitiesController.js.map

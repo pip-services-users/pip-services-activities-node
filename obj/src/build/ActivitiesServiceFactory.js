@@ -23,6 +23,7 @@ class ActivitiesServiceFactory extends pip_services3_components_node_1.Factory {
         this.registerAsType(ActivitiesServiceFactory.CommandableGrpcServiceDescriptor, ActivitiesCommandableGrpcServiceV1_1.ActivitiesCommandableGrpcServiceV1);
     }
 }
+exports.ActivitiesServiceFactory = ActivitiesServiceFactory;
 ActivitiesServiceFactory.Descriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "factory", "default", "default", "1.0");
 ActivitiesServiceFactory.MemoryPersistenceDescriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "persistence", "memory", "*", "1.0");
 ActivitiesServiceFactory.FilePersistenceDescriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "persistence", "file", "*", "1.0");
@@ -32,5 +33,4 @@ ActivitiesServiceFactory.ControllerDescriptor = new pip_services3_commons_node_1
 ActivitiesServiceFactory.HttpServiceDescriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "service", "http", "*", "1.0");
 ActivitiesServiceFactory.GrpcServiceDescriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "service", "grpc", "*", "1.0");
 ActivitiesServiceFactory.CommandableGrpcServiceDescriptor = new pip_services3_commons_node_1.Descriptor("pip-services-activities", "service", "commandable-grpc", "*", "1.0");
-exports.ActivitiesServiceFactory = ActivitiesServiceFactory;
 //# sourceMappingURL=ActivitiesServiceFactory.js.map

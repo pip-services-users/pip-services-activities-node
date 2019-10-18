@@ -4,9 +4,9 @@ export declare class ActivitiesGrpcServiceV1 extends GrpcService {
     private _controller;
     constructor();
     setReferences(references: IReferences): void;
-    private getPartyActivities(call, callback);
-    private logPartyActivity(call, callback);
-    private batchPartyActivities(call, callback);
-    private deletePartyActivities(call, callback);
+    private getPartyActivities;
+    private logPartyActivity;
+    private batchPartyActivities;
+    private deletePartyActivities;
     register(): void;
 }

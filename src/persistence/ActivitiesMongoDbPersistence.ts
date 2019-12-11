@@ -4,17 +4,16 @@ let async = require('async');
 import { FilterParams } from 'pip-services3-commons-node';
 import { PagingParams } from 'pip-services3-commons-node';
 import { DataPage } from 'pip-services3-commons-node';
-import { IdentifiableMongoosePersistence } from 'pip-services3-mongoose-node';
+import { IdentifiableMongoDbPersistence } from 'pip-services3-mongodb-node';
 
 import { PartyActivityV1 } from '../data/version1/PartyActivityV1';
 import { IActivitiesPersistence } from './IActivitiesPersistence';
-import { ActivitiesMongooseSchema } from './ActivitiesMongooseSchema';
 
 export class ActivitiesMongoDbPersistence 
-    extends IdentifiableMongoosePersistence<PartyActivityV1, string> implements IActivitiesPersistence {
+    extends IdentifiableMongoDbPersistence<PartyActivityV1, string> implements IActivitiesPersistence {
 
     constructor() {
-        super('party_activities', ActivitiesMongooseSchema());
+        super('party_activities');
     }
         
     private composeFilter(filter: FilterParams): any {
@@ -106,7 +105,7 @@ export class ActivitiesMongoDbPersistence
 
         let criteria = this.composeFilter(filter);
 
-        this._model.remove(
+        this._collection.remove(
             criteria,
             { multi: true },
             (err) => { callback(err); }

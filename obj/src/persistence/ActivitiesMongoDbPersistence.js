@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let _ = require('lodash');
 let async = require('async');
 const pip_services3_commons_node_1 = require("pip-services3-commons-node");
-const pip_services3_mongoose_node_1 = require("pip-services3-mongoose-node");
-const ActivitiesMongooseSchema_1 = require("./ActivitiesMongooseSchema");
-class ActivitiesMongoDbPersistence extends pip_services3_mongoose_node_1.IdentifiableMongoosePersistence {
+const pip_services3_mongodb_node_1 = require("pip-services3-mongodb-node");
+class ActivitiesMongoDbPersistence extends pip_services3_mongodb_node_1.IdentifiableMongoDbPersistence {
     constructor() {
-        super('party_activities', ActivitiesMongooseSchema_1.ActivitiesMongooseSchema());
+        super('party_activities');
     }
     composeFilter(filter) {
         filter = filter || new pip_services3_commons_node_1.FilterParams();
@@ -78,7 +77,7 @@ class ActivitiesMongoDbPersistence extends pip_services3_mongoose_node_1.Identif
     }
     deleteByFilter(correlationId, filter, callback) {
         let criteria = this.composeFilter(filter);
-        this._model.remove(criteria, { multi: true }, (err) => { callback(err); });
+        this._collection.remove(criteria, { multi: true }, (err) => { callback(err); });
     }
 }
 exports.ActivitiesMongoDbPersistence = ActivitiesMongoDbPersistence;

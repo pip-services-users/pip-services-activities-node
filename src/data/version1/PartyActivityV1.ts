@@ -19,6 +19,7 @@ export class PartyActivityV1 implements IStringIdentifiable {
 
     /* Identification */
     public id: string;
+    public org_id?: string;
 
     /* Identification fields */
     public time: Date;

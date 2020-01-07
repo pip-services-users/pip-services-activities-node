@@ -168,6 +168,7 @@ export class ActivitiesGrpcConverterV1 {
         let obj = new messages.PartyActivity();
 
         obj.setId(activity.id);
+        obj.setOrgId(activity.org_id);
         obj.setTime(StringConverter.toString(activity.time));
         obj.setType(activity.type);
         obj.setParty(ActivitiesGrpcConverterV1.fromReference(activity.party));
@@ -184,6 +185,7 @@ export class ActivitiesGrpcConverterV1 {
 
         let activity: PartyActivityV1 = {
             id: obj.getId(),
+            org_id: obj.getOrgId(),
             time: DateTimeConverter.toDateTime(obj.getTime()),
             type: obj.getType(),
             party: ActivitiesGrpcConverterV1.toReference(obj.getParty()),

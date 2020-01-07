@@ -11,7 +11,8 @@ export class PartyActivityV1Schema extends ObjectSchema {
         let referenceSchema = new ReferenceV1Schema();
 
         this.withOptionalProperty('id', TypeCode.String);
-        this.withOptionalProperty('time', null); //TypeCode.DateTime);
+        this.withOptionalProperty('org_id', TypeCode.String);
+        this.withOptionalProperty('time', TypeCode.DateTime);
         this.withRequiredProperty('type', TypeCode.String);
         this.withRequiredProperty('party', referenceSchema);
         this.withOptionalProperty('ref_item', referenceSchema);

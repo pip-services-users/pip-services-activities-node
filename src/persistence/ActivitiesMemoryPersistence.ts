@@ -57,6 +57,7 @@ export class ActivitiesMemoryPersistence
         filter = filter || new FilterParams();
         let search = filter.getAsNullableString('search');
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
+        let orgId = filter.getAsNullableString('org_id');
         let type = filter.getAsNullableString('type');
         let includeTypes = filter.getAsObject('include_types');
         let excludeTypes = filter.getAsObject('exclude_types');
@@ -77,6 +78,8 @@ export class ActivitiesMemoryPersistence
             if (search != null && !this.matchSearch(item, search))
                 return false;
             if (id != null && id != item.id)
+                return false;
+            if (orgId != null && orgId != item.org_id)
                 return false;
             if (type != null && type != item.type)
                 return false;

@@ -12,6 +12,7 @@ class ActivitiesCouchbasePersistence extends pip_services3_couchbase_node_1.Iden
         filter = filter || new pip_services3_commons_node_1.FilterParams();
         let search = filter.getAsNullableString('search');
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
+        let orgId = filter.getAsNullableString('org_id');
         let type = filter.getAsNullableString('type');
         let includeTypes = filter.getAsObject('include_types');
         let excludeTypes = filter.getAsObject('exclude_types');
@@ -34,6 +35,8 @@ class ActivitiesCouchbasePersistence extends pip_services3_couchbase_node_1.Iden
         let filters = [];
         if (id != null)
             filters.push("id='" + id + "'");
+        if (orgId != null)
+            filters.push("org_id='" + orgId + "'");
         if (type != null)
             filters.push("type='" + type + "'");
         if (includeTypes != null) {

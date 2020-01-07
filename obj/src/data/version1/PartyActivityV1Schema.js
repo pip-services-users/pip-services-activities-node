@@ -9,7 +9,8 @@ class PartyActivityV1Schema extends pip_services3_commons_node_1.ObjectSchema {
         super();
         let referenceSchema = new ReferenceV1Schema_1.ReferenceV1Schema();
         this.withOptionalProperty('id', pip_services3_commons_node_3.TypeCode.String);
-        this.withOptionalProperty('time', null); //TypeCode.DateTime);
+        this.withOptionalProperty('org_id', pip_services3_commons_node_3.TypeCode.String);
+        this.withOptionalProperty('time', pip_services3_commons_node_3.TypeCode.DateTime);
         this.withRequiredProperty('type', pip_services3_commons_node_3.TypeCode.String);
         this.withRequiredProperty('party', referenceSchema);
         this.withOptionalProperty('ref_item', referenceSchema);

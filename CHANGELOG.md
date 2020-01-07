@@ -1,3 +1,8 @@
+<a name="1.2.0"></a> ### 1.2.0 (2020-01-06)
+
+#### Features
+* **data** Added org_id field with filters
+
 <a name="1.0.0"></a> ### 1.0.0 (2017-04-02)
 
 #### Features

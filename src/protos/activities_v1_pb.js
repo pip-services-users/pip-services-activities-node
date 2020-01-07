@@ -1026,7 +1026,8 @@ proto.activities_v1.PartyActivity.toObject = function(includeInstance, msg) {
     refParentsList: jspb.Message.toObjectList(msg.getRefParentsList(),
     proto.activities_v1.Reference.toObject, includeInstance),
     refParty: (f = msg.getRefParty()) && proto.activities_v1.Reference.toObject(includeInstance, f),
-    detailsMap: (f = msg.getDetailsMap()) ? f.toObject(includeInstance, undefined) : []
+    detailsMap: (f = msg.getDetailsMap()) ? f.toObject(includeInstance, undefined) : [],
+    orgId: jspb.Message.getFieldWithDefault(msg, 9, "")
   };
 
   if (includeInstance) {
@@ -1100,6 +1101,10 @@ proto.activities_v1.PartyActivity.deserializeBinaryFromReader = function(msg, re
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "");
          });
+      break;
+    case 9:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setOrgId(value);
       break;
     default:
       reader.skipField();
@@ -1186,6 +1191,13 @@ proto.activities_v1.PartyActivity.serializeBinaryToWriter = function(message, wr
   f = message.getDetailsMap(true);
   if (f && f.getLength() > 0) {
     f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
+  f = message.getOrgId();
+  if (f.length > 0) {
+    writer.writeString(
+      9,
+      f
+    );
   }
 };
 
@@ -1386,6 +1398,21 @@ proto.activities_v1.PartyActivity.prototype.getDetailsMap = function(opt_noLazyC
  */
 proto.activities_v1.PartyActivity.prototype.clearDetailsMap = function() {
   this.getDetailsMap().clear();
+};
+
+
+/**
+ * optional string org_id = 9;
+ * @return {string}
+ */
+proto.activities_v1.PartyActivity.prototype.getOrgId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/** @param {string} value */
+proto.activities_v1.PartyActivity.prototype.setOrgId = function(value) {
+  jspb.Message.setProto3StringField(this, 9, value);
 };
 
 

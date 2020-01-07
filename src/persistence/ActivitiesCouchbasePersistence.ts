@@ -21,6 +21,7 @@ export class ActivitiesCouchbasePersistence
 
         let search = filter.getAsNullableString('search');
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
+        let orgId = filter.getAsNullableString('org_id');
         let type = filter.getAsNullableString('type');
         let includeTypes = filter.getAsObject('include_types');
         let excludeTypes = filter.getAsObject('exclude_types');
@@ -46,6 +47,8 @@ export class ActivitiesCouchbasePersistence
         let filters: string[] = [];
         if (id != null)
             filters.push("id='" + id + "'");
+        if (orgId != null)
+            filters.push("org_id='" + orgId + "'");
         if (type != null)
             filters.push("type='" + type + "'");
         if (includeTypes != null) {

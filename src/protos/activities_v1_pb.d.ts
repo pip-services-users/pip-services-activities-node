@@ -142,6 +142,9 @@ export class PartyActivity extends jspb.Message {
 
   getDetailsMap(): jspb.Map<string, string>;
   clearDetailsMap(): void;
+  getOrgId(): string;
+  setOrgId(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PartyActivity.AsObject;
   static toObject(includeInstance: boolean, msg: PartyActivity): PartyActivity.AsObject;
@@ -162,6 +165,7 @@ export namespace PartyActivity {
     refParentsList: Array<Reference.AsObject>,
     refParty?: Reference.AsObject,
     detailsMap: Array<[string, string]>,
+    orgId: string,
   }
 }
 

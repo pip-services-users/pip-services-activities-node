@@ -7,6 +7,7 @@ const pip_services3_mongodb_node_1 = require("pip-services3-mongodb-node");
 class ActivitiesMongoDbPersistence extends pip_services3_mongodb_node_1.IdentifiableMongoDbPersistence {
     constructor() {
         super('party_activities');
+        super.ensureIndex({ time: -1 });
     }
     composeFilter(filter) {
         filter = filter || new pip_services3_commons_node_1.FilterParams();
@@ -24,6 +25,9 @@ class ActivitiesMongoDbPersistence extends pip_services3_mongodb_node_1.Identifi
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
         if (id != null)
             criteria.push({ _id: id });
+        let orgId = filter.getAsNullableString('org_id');
+        if (orgId != null)
+            criteria.push({ org_id: orgId });
         let type = filter.getAsNullableString('type');
         if (type != null)
             criteria.push({ type: type });

@@ -14,6 +14,7 @@ export class ActivitiesMongoDbPersistence
 
     constructor() {
         super('party_activities');
+        super.ensureIndex({ time: -1 });
     }
         
     private composeFilter(filter: FilterParams): any {
@@ -35,6 +36,10 @@ export class ActivitiesMongoDbPersistence
         let id = filter.getAsNullableString('id') || filter.getAsNullableString('activity_id');
         if (id != null)
             criteria.push({ _id: id });
+
+        let orgId = filter.getAsNullableString('org_id');
+        if (orgId != null)
+            criteria.push({ org_id: orgId });
 
         let type = filter.getAsNullableString('type');
         if (type != null)

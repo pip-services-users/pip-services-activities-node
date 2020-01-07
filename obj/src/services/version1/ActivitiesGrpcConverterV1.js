@@ -129,6 +129,7 @@ class ActivitiesGrpcConverterV1 {
             return null;
         let obj = new messages.PartyActivity();
         obj.setId(activity.id);
+        obj.setOrgId(activity.org_id);
         obj.setTime(pip_services3_commons_node_2.StringConverter.toString(activity.time));
         obj.setType(activity.type);
         obj.setParty(ActivitiesGrpcConverterV1.fromReference(activity.party));
@@ -143,6 +144,7 @@ class ActivitiesGrpcConverterV1 {
             return null;
         let activity = {
             id: obj.getId(),
+            org_id: obj.getOrgId(),
             time: pip_services3_commons_node_3.DateTimeConverter.toDateTime(obj.getTime()),
             type: obj.getType(),
             party: ActivitiesGrpcConverterV1.toReference(obj.getParty()),
